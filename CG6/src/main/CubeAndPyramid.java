@@ -104,18 +104,18 @@ public class CubeAndPyramid {
     
     public static void initCube()
     {
-        Util.mul(cubeModel[0], Util.translationX(  0.5f, null), Util.scale(0.25f, null));
-        Util.mul(cubeModel[1], Util.translationX( 0.25f, null), Util.translationZ(0.25f, null), Util.rotationY( Util.PI_DIV2, null),  Util.scale(0.25f, null));
-        Util.mul(cubeModel[2], Util.translationX( 0.75f, null), Util.translationZ(0.25f, null), Util.rotationY( Util.PI_DIV2, null),  Util.scale(0.25f, null));
-        Util.mul(cubeModel[3], Util.translationX(  0.5f, null), Util.translationZ( 0.5f, null), Util.scale(0.25f, null));
+        Util.mul(cubeModel[0], Util.translationX(  0.5f, null), Util.translationZ(-0.25f, null), Util.scale(0.25f, null));
+        Util.mul(cubeModel[1], Util.translationX( 0.25f, null), Util.rotationY( Util.PI_DIV2, null),  Util.scale(0.25f, null));
+        Util.mul(cubeModel[2], Util.translationX( 0.75f, null), Util.rotationY( Util.PI_DIV2, null),  Util.scale(0.25f, null));
+        Util.mul(cubeModel[3], Util.translationX(  0.5f, null), Util.translationZ( 0.25f, null), Util.scale(0.25f, null));	
     }
     
     public static void initPyramid()
     {
-        Util.mul(pyramidModel[0], Util.translationX(-0.5f, null),  Util.rotationX((float) Math.PI/6f, null), Util.scale(0.25f, null));
-        Util.mul(pyramidModel[1], Util.translationZ( 0.25f, null), Util.translationX(-0.5f, null),   Util.rotationX((float) -Math.PI/6f, null), Util.scale(0.25f, null));
-        Util.mul(pyramidModel[2], Util.translationZ( 0.125f,null), Util.translationX(-0.625f, null), Util.rotationY(Util.PI_DIV2, null),  Util.rotationX((float) Math.PI/6f, null), Util.scale(0.25f, null));
-        Util.mul(pyramidModel[3], Util.translationZ( 0.125f,null), Util.translationX(-0.375f, null), Util.rotationY(-Util.PI_DIV2, null), Util.rotationX((float) Math.PI/6f, null), Util.scale(0.25f, null));        
+        Util.mul(pyramidModel[0], Util.translationX(-0.5f, null), Util.translationX(-0.125f, null), Util.rotationY(Util.PI_DIV2, null), Util.rotationX(Util.PI / 6.0f, null), Util.scale(0.25f, null));
+        Util.mul(pyramidModel[1], Util.translationX(-0.5f, null), Util.translationZ(+0.125f, null), Util.rotationY(Util.PI, null),      Util.rotationX(Util.PI / 6.0f, null), Util.scale(0.25f, null));
+        Util.mul(pyramidModel[2], Util.translationX(-0.5f, null), Util.translationX(+0.125f, null), Util.rotationY(3f * Util.PI_DIV2, null) , Util.rotationX(Util.PI / 6.0f, null), Util.scale(0.25f, null));
+        Util.mul(pyramidModel[3], Util.translationX(-0.5f, null), Util.translationZ(-0.125f, null), Util.rotationX(Util.PI / 6.0f, null), Util.scale(0.25f, null));
     }
     
     public static void handleInput(long millis) {
