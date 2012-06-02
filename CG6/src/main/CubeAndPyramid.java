@@ -128,8 +128,8 @@ public class CubeAndPyramid {
                     case Keyboard.KEY_S:        moveDir.z -= 1.0f; break;
                     case Keyboard.KEY_A:        moveDir.x += 1.0f; break;
                     case Keyboard.KEY_D:        moveDir.x -= 1.0f; break;
-                    case Keyboard.KEY_LCONTROL: moveDir.y += 1.0f; break;
-                    case Keyboard.KEY_SPACE:    moveDir.y -= 1.0f; break;
+                    case Keyboard.KEY_LCONTROL: moveDir.y -= 1.0f; break;
+                    case Keyboard.KEY_SPACE:    moveDir.y += 1.0f; break;
                 }
             } else {
                 switch(Keyboard.getEventKey()) {
@@ -137,8 +137,8 @@ public class CubeAndPyramid {
                     case Keyboard.KEY_S:        moveDir.z += 1.0f; break;
                     case Keyboard.KEY_A:        moveDir.x -= 1.0f; break;
                     case Keyboard.KEY_D:        moveDir.x += 1.0f; break;
-                    case Keyboard.KEY_LCONTROL: moveDir.y -= 1.0f; break;
-                    case Keyboard.KEY_SPACE:    moveDir.y += 1.0f; break;
+                    case Keyboard.KEY_LCONTROL: moveDir.y += 1.0f; break;
+                    case Keyboard.KEY_SPACE:    moveDir.y -= 1.0f; break;
                     case Keyboard.KEY_F1:  cam.changeProjection(); break;
                 }
             }
