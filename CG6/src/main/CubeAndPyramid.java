@@ -1,8 +1,6 @@
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
- * 
- * GIT TEST
  */
 package main;
 
@@ -41,6 +39,8 @@ public class CubeAndPyramid {
     private static int quadVAID;        // vertexarrayobject id of the cube
     private static int triangleVAID;    // vertexarrayobject id of the pyramid
     private static int modelLocation;   // uniform location of "model"
+    private static final Vector2f rotation = new Vector2f();
+    private static final Matrix4f cubeMat = new Matrix4f();
     private static final Camera cam = new Camera();
     private static final Matrix4f cubeModel[] = new Matrix4f[] {
         new Matrix4f(), new Matrix4f(), new Matrix4f(), new Matrix4f(),
@@ -78,13 +78,33 @@ public class CubeAndPyramid {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
             glUseProgram(programID);
             
-            for(Matrix4f cubeSide : cubeModel) {
-                cubeSide.store(Util.MAT_BUFFER);
-                Util.MAT_BUFFER.position(0);
-                glUniformMatrix4(modelLocation, false, Util.MAT_BUFFER);
-                glBindVertexArray(quadVAID);
-                glDrawArrays(GL_LINE_LOOP, 0, 4);
+            Matrix4f trans = new Matrix4f();
+            Matrix4f temp = new Matrix4f();
+            for(int x=-1; x <= 1; ++x) {
+                for(int y=-1; y <= 1; ++y) {
+                    for(int z=-1; z <= 1; ++z) {
+                        if(x != 0 || y != 0 || z != 0) {
+                            Util.translation(new Vector3f(x, y, z), trans);
+                            for(Matrix4f cubeSide : cubeModel) {
+                                Util.mul(temp, trans, cubeMat, cubeSide);
+                                temp.store(Util.MAT_BUFFER);
+                                Util.MAT_BUFFER.position(0);
+                                glUniformMatrix4(modelLocation, false, Util.MAT_BUFFER);
+                                glBindVertexArray(quadVAID);
+                                glDrawArrays(GL_LINE_LOOP, 0, 4);
+                            }                        
+                        }
+                    }
+                }
             }
+            
+//            for(Matrix4f cubeSide : cubeModel) {
+//                cubeSide.store(Util.MAT_BUFFER);
+//                Util.MAT_BUFFER.position(0);
+//                glUniformMatrix4(modelLocation, false, Util.MAT_BUFFER);
+//                glBindVertexArray(quadVAID);
+//                glDrawArrays(GL_LINE_LOOP, 0, 4);
+//            }
             
             for(Matrix4f pyramidSide : pyramidModel) {
                 pyramidSide.store(Util.MAT_BUFFER);
@@ -104,24 +124,28 @@ public class CubeAndPyramid {
         }
     }
     
-    public static void initCube()
-    {
-        Util.mul(cubeModel[0], Util.translationX(  0.5f, null), Util.translationZ(-0.25f, null), Util.scale(0.25f, null));
-        Util.mul(cubeModel[1], Util.translationX( 0.25f, null), Util.rotationY( Util.PI_DIV2, null),  Util.scale(0.25f, null));
-        Util.mul(cubeModel[2], Util.translationX( 0.75f, null), Util.rotationY( Util.PI_DIV2, null),  Util.scale(0.25f, null));
-        Util.mul(cubeModel[3], Util.translationX(  0.5f, null), Util.translationZ( 0.25f, null), Util.scale(0.25f, null));	
+    public static void initCube() {
+        Matrix4f rot = Util.rotationY(Util.PI_DIV2, null);
+        Util.mul(cubeModel[0], Util.translationX(-0.25f, null), rot, Util.scale(0.25f, null));
+        Util.mul(cubeModel[1], Util.translationZ(+0.25f, null),      Util.scale(0.25f, null));
+        Util.mul(cubeModel[2], Util.translationX(+0.25f, null), rot, Util.scale(0.25f, null));
+        Util.mul(cubeModel[3], Util.translationZ(-0.25f, null),      Util.scale(0.25f, null));
     }
     
-    public static void initPyramid()
-    {
-        Util.mul(pyramidModel[0], Util.translationX(-0.5f, null), Util.translationX(-0.125f, null), Util.rotationY(Util.PI_DIV2, null), Util.rotationX(Util.PI / 6.0f, null), Util.scale(0.25f, null));
-        Util.mul(pyramidModel[1], Util.translationX(-0.5f, null), Util.translationZ(+0.125f, null), Util.rotationY(Util.PI, null),      Util.rotationX(Util.PI / 6.0f, null), Util.scale(0.25f, null));
-        Util.mul(pyramidModel[2], Util.translationX(-0.5f, null), Util.translationX(+0.125f, null), Util.rotationY(3f * Util.PI_DIV2, null) , Util.rotationX(Util.PI / 6.0f, null), Util.scale(0.25f, null));
-        Util.mul(pyramidModel[3], Util.translationX(-0.5f, null), Util.translationZ(-0.125f, null), Util.rotationX(Util.PI / 6.0f, null), Util.scale(0.25f, null));
+    public static void initPyramid() {
+        Matrix4f tilt = Util.rotationX(Util.PI / 6.0f, null);
+        Matrix4f rot = Util.rotationY(Util.PI_DIV2, null);
+        Matrix4f translation = Util.translationX(-0.5f, null);
+        Util.mul(pyramidModel[0], translation, Util.translationX(-0.125f, null), rot,           tilt, Util.scale(0.25f, null));
+        Util.mul(pyramidModel[1], translation, Util.translationZ(+0.125f, null), rot, rot,      tilt, Util.scale(0.25f, null));
+        Util.mul(pyramidModel[2], translation, Util.translationX(+0.125f, null), rot, rot, rot, tilt, Util.scale(0.25f, null));
+        Util.mul(pyramidModel[3], translation, Util.translationZ(-0.125f, null),                tilt, Util.scale(0.25f, null));
     }
     
     public static void handleInput(long millis) {
         float moveSpeed = 2e-3f*(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) ? 2.0f : 1.0f)*(float)millis;
+        float rotSpeed = 5e-3f*(Keyboard.isKeyDown(Keyboard.KEY_RSHIFT) ? 2.0f : 1.0f)*(float)millis;
+        float camSpeed = (float) 5e-3;  
         
         while(Keyboard.next()) {
             if(Keyboard.getEventKeyState()) {
@@ -147,8 +171,7 @@ public class CubeAndPyramid {
         }
         
         cam.move(moveSpeed * moveDir.z , moveSpeed * moveDir.x, moveSpeed * moveDir.y);
-
-		float camSpeed = (float) 5e-3;   
+ 
 		while(Mouse.next())
 		{
 			if(Mouse.getEventButton() == 0)
@@ -164,9 +187,17 @@ public class CubeAndPyramid {
 		}
 		        
         if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) bContinue = false;
+        
+        if(Keyboard.isKeyDown(Keyboard.KEY_UP)) rotation.x += rotSpeed;
+        if(Keyboard.isKeyDown(Keyboard.KEY_DOWN)) rotation.x -= rotSpeed;
+        if(Keyboard.isKeyDown(Keyboard.KEY_LEFT)) rotation.y += rotSpeed;
+        if(Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) rotation.y -= rotSpeed;
+        if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) bContinue = false;
     }
     
     public static void updateUniforms() {  
+        Matrix4f cubeTrans = Util.translationX(+0.5f, null);
+        Util.mul(cubeMat, cubeTrans, Util.rotationX(rotation.x, null), Util.rotationY(rotation.y, null));
         
         Matrix4f view = cam.getView();
         Matrix4f projection = cam.getProjection();
