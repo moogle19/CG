@@ -146,8 +146,7 @@ public class CubeAndPyramid {
         
         cam.move(moveSpeed * moveDir.z , moveSpeed * moveDir.x, moveSpeed * moveDir.y);
 
-		float camSpeed = (float) 5e-3;
-		        
+		float camSpeed = (float) 5e-3;   
 		while(Mouse.next())
 		{
 			if(Mouse.getEventButton() == 0)
