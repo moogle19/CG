@@ -33,10 +33,10 @@ public final class Camera {
     public void rotate(float dPhi, float dTheta) {
     	this.phi += dPhi;
     	this.theta += dTheta;
-    	if(theta > Math.PI/2) //beschraenkt die bewegung der kamera nach unten auf 90grad
-    		theta = (float) Math.PI/2;
-    	else if(theta < -Math.PI/2) //beschraenkt sicht nach oben um 90grad
-    		theta = (float)-Math.PI/2;
+    	if(theta > Util.PI_DIV2) //beschraenkt die bewegung der kamera nach unten auf 90grad
+    		theta = Util.PI_DIV2;
+    	else if(theta < -Util.PI_DIV2) //beschraenkt sicht nach oben um 90grad
+    		theta = -Util.PI_DIV2;
     	Matrix4f rotX = Util.rotationX(this.theta, null);
     	Matrix4f rotY = Util.rotationY(this.phi, null);
     	Matrix4f rot = Util.mul(null, rotY, rotX);
