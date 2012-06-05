@@ -81,5 +81,9 @@ public class Geometry {
      */
     public void draw() {
         // TODO: Aufgabe 7.1
+    	if(vaid == -1)
+    		this.construct();
+    	
+    	glDrawElements(this.topology, this.indexCount, GL_UNSIGNED_INT, 0);
     }
 }
