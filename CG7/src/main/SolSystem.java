@@ -7,6 +7,7 @@ package main;
 import static opengl.GL.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import opengl.GL;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -19,7 +20,7 @@ import util.Util;
 
 /**
  *
- * @author NMARNIOK
+ * @author Sascha Kolodzey, Nico Marniok
  */
 public class SolSystem {
     private static int programID;       // shader program id
@@ -29,6 +30,8 @@ public class SolSystem {
     private static final Vector3f moveDir = new Vector3f(0.0f, 0.0f, 0.0f);
     private static boolean bContinue = true;
     private static final Camera cam = new Camera();
+    private static boolean culling = true;
+    private static boolean wireframe = true;
     
     public static void main(String[] argv) {
         try {
@@ -40,14 +43,14 @@ public class SolSystem {
             glFrontFace(GL_CCW);
             glCullFace(GL_BACK);
             render();
-            Display.destroy();
+            GL.destroy();
         } catch (LWJGLException ex) {
             Logger.getLogger(SolSystem.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
     public static void render() throws LWJGLException {
-        glClearColor(0.0f, 0.0f, 0.25f, 1.0f); // dark blue
+        glClearColor(0.1f, 0.0f, 0.0f, 1.0f); // dark red
         long last = System.currentTimeMillis();
         long now;
         while(bContinue && !Display.isCloseRequested()) {            
@@ -92,6 +95,8 @@ public class SolSystem {
                     case Keyboard.KEY_SPACE: moveDir.y -= 1.0f; break;
                     case Keyboard.KEY_C: moveDir.y += 1.0f; break;
                     case Keyboard.KEY_F1: cam.changeProjection(); break;
+                    case Keyboard.KEY_F2: glPolygonMode(GL_FRONT_AND_BACK, (wireframe ^= true) ? GL_FILL : GL_LINE); break;
+                    case Keyboard.KEY_F3: if(culling ^= true) glEnable(GL_CULL_FACE); else glDisable(GL_CULL_FACE); break;
                 }
             }
         }

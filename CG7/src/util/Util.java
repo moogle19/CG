@@ -525,6 +525,7 @@ public class Util {
      * @return Geometrie der Kugel
      */
     public static Geometry createSphere(float r, int n, int k, String imageFile) {
+        // TODO: Aufgabe 7.2
         return null;
     }
     

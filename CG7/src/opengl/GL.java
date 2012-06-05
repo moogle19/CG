@@ -1,14 +1,11 @@
 package opengl;
 
+import org.lwjgl.opengl.*;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.*;
-import util.Util;
-
-
 
 /**
  * Veraenderungen erfolgen auf eigene Gefahr! Wenn Sie Probleme bekommen und
@@ -64,6 +61,12 @@ public class GL {
         }
     }
     
+    public static void destroy() {
+        Keyboard.destroy();
+        Mouse.destroy();
+        Display.destroy();
+    }
+    
     /**
      * GL11.GL_BACK
      */
@@ -102,7 +105,12 @@ public class GL {
     /**
      * GL15.GL_ELEMENT_ARRAY_BUFFER
      */  
-    public static final int GL_ELEMENT_ARRAY_BUFFER = GL15.GL_ELEMENT_ARRAY_BUFFER;  
+    public static final int GL_ELEMENT_ARRAY_BUFFER = GL15.GL_ELEMENT_ARRAY_BUFFER; 
+    
+    /**
+     * GL11.GL_FILL
+     */
+    public static final int GL_FILL = GL11.GL_FILL;
     
     /**
      * GL11.GL_FLOAT
@@ -117,12 +125,22 @@ public class GL {
     /**
      * GL11.GL_BACK
      */
-    public static final int GL_FRONT = GL11.GL_FRONT;  
+    public static final int GL_FRONT = GL11.GL_FRONT;
+    
+    /**
+     * GL11.GL_FRONT_AND_BACK
+     */
+    public static final int GL_FRONT_AND_BACK = GL11.GL_FRONT_AND_BACK;
     
     /**
      * GL11.GL_LINE_LOOP
      */
     public static final int GL_LINE_LOOP = GL11.GL_LINE_LOOP;  
+    
+    /**
+     * GL11.GL_LINE
+     */
+    public static final int GL_LINE = GL11.GL_LINE;
     
     /**
      * GL11.GL_POINTS
@@ -316,7 +334,7 @@ public class GL {
     public static void glCullFace(int mode) {
         GL11.glCullFace(mode);
         GL.checkError("glCullFace");
-    }  
+    }    
     
     /**
      * OpenGL 1.5
@@ -516,6 +534,17 @@ public class GL {
     public static void glPointSize(float size) {
         GL11.glPointSize(size);
         GL.checkError("glPointSize");
+    }
+    
+    /**
+     * OpenGL 1.1
+     * @see <a href="http://www.opengl.org/sdk/docs/man4/xhtml/glPolygonMode.xml">glPolygonMode</a>
+     * @param face
+     * @param mode 
+     */
+    public static void glPolygonMode(int face, int mode) {
+        GL11.glPolygonMode(face, mode);
+        GL.checkError("glPolygonMode");
     }
     
     /**

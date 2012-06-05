@@ -15,7 +15,7 @@ public final class Camera {
     private final Vector3f camPos = new Vector3f(0,0,-1);
     private final Matrix4f view = new Matrix4f();
     private final Matrix4f projection = new Matrix4f();
-    private boolean perspective = false;
+    private boolean perspective = true;
 
     /**
      * Default Constructor.

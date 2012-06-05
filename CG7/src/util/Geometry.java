@@ -26,6 +26,9 @@ public class Geometry {
      */
     public void setIndexBuffer(IntBuffer indices, int topology) {
         // TODO: Aufgabe 7.1
+    	this.indexValueBuffer = indices;
+    	this.indexCount = indices.limit();
+    	this.topology = topology;
     }
 
     /**
@@ -35,6 +38,7 @@ public class Geometry {
      */
     public void setVertices(FloatBuffer vertices) {
         // TODO: Aufgabe 7.1
+    	this.vertexValueBuffer = vertices;
     }
     
     /**
@@ -45,6 +49,16 @@ public class Geometry {
         if(vertexValueBuffer == null || indexValueBuffer == null) {
             throw new UnsupportedOperationException("Vertex- und Indexbuffer wurden noch nicht gesetzt!");
         }
+        vaid = glGenVertexArrays();
+        glBindVertexArray(vaid);
+
+        ibid = glGenBuffers();
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibid);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexValueBuffer, GL_STATIC_DRAW);
+        
+        vbid = glGenBuffers();
+        glBindBuffer(GL_ARRAY_BUFFER, vbid);
+        glBufferData(GL_ARRAY_BUFFER, vertexValueBuffer, GL_STATIC_DRAW);
         
         // TODO: Aufgabe 7.1
     }
@@ -56,6 +70,9 @@ public class Geometry {
      */
     public void delete() {
         // TODO: Aufgabe 7.1
+    	glDeleteBuffers(ibid);
+    	glDeleteBuffers(vbid);
+    	glDeleteVertexArrays(vaid);
     }
     
     /**
