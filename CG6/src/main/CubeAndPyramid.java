@@ -145,7 +145,7 @@ public class CubeAndPyramid {
     public static void handleInput(long millis) {
         float moveSpeed = 2e-3f*(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) ? 2.0f : 1.0f)*(float)millis;
         float rotSpeed = 5e-3f*(Keyboard.isKeyDown(Keyboard.KEY_RSHIFT) ? 2.0f : 1.0f)*(float)millis;
-        float camSpeed = (float) 5e-3;  
+        float camSpeed = 5e-3f;  
         
         while(Keyboard.next()) {
             if(Keyboard.getEventKeyState()) {
