@@ -529,20 +529,20 @@ public class Util {
      */
     public static Geometry createSphere(float r, int n, int k, String imageFile) {
     	Geometry sphere = new Geometry();
-    	float[] indi = new float[k*n*6+2*6];
+    	float[] indi = new float[k*n*6+2*6]; // k*n vertices *6 floats per vertex and north and south pole vertices 
     	float[][][] image = getImageContents(imageFile); //[y][x][color]  0 < y < image.height 0 < x < image.width
     	float dTheta = Util.PI / (k+1); //angle between z and horizontal scale
     	float dPhi = Util.PI_MUL2 / (n); //angle between x and vetical scale
-    	int xcol, ycol, count = 0;
-    	float x,y,z,red,green,blue = 0f;
+    	int xcol, ycol, count = 0; //xcol/ycol = x/y coordinate for color
+    	float x,y,z,red,green,blue = 0f; //coordinates and color attributes
     	/*
     	 * x = r*sin(theta)*cos(phi) 
     	 * y = r*cos(theta)
     	 * z = r*sin(theta)*sin(phi)
     	 * 
     	 * 0 <= theta <= pi ; 0 <= phi < 2*pi
-    	 * theta = Winkel zwischen z-Achse und r (k)
-    	 * phi = Winkel zwischen pos. x-Achse und r (n)
+    	 * theta = angle between z-Axis and r (k) 
+    	 * phi = angle between pos. x-axis and r (n)
     	 * 
     	 */
     	
@@ -555,7 +555,7 @@ public class Util {
     			z = (float) (r*Math.sin(dTheta+dTheta*j)*Math.sin(dPhi*i));
 
     			// TODO: Texture is not right (Upside down and sides changed)
-    			ycol = (int)(((y+r)/(2*r))*(image.length-1)); // wert zwischen 0 und 1 in verhaeltnis x*r/d = xcol/image
+    			ycol = (int)(((y+r)/(2*r))*(image.length-1)); // value between 0 and 1 | ratio: x*r/d = xcol/image
     			if(z >= 0)
     				xcol = (int)(((x+r)/(2*r))*(image[0].length-1))/2;
     			else
@@ -574,12 +574,12 @@ public class Util {
     		}
     	}
     	// TODO: Make this look better
-    	indi[k*n*6] = 0;
+    	indi[k*n*6] = 0; //northpole vertex
     	indi[k*n*6+1] = r;
     	indi[k*n*6+2] = 0;
     	indi[k*n*6+4] = 1;
     	
-    	indi[k*n*6+6] = 0;
+    	indi[k*n*6+6] = 0; //southpole vertex
     	indi[k*n*6+7] = -r;
     	indi[k*n*6+8] = 0;
     	indi[k*n*6+10] = 1;

@@ -1,6 +1,9 @@
 package opengl;
 
+import static opengl.GL.glEnable;
+
 import org.lwjgl.opengl.*;
+
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import org.lwjgl.LWJGLException;
@@ -31,6 +34,7 @@ public class GL {
                 supported = false;
             }
             GL11.glViewport(0, 0, WIDTH, HEIGHT);
+            glEnable(GL11.GL_DEPTH_TEST);
             Mouse.create();
             Keyboard.create();  
             
