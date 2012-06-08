@@ -25,7 +25,6 @@ public class Geometry {
      * @param topology Zugehoerige Topologie
      */
     public void setIndexBuffer(IntBuffer indices, int topology) {
-        // TODO: Aufgabe 7.1
     	this.indexValueBuffer = indices;
     	this.indexCount = indices.limit();
     	this.topology = topology;
@@ -37,7 +36,6 @@ public class Geometry {
      * @param vertices 
      */
     public void setVertices(FloatBuffer vertices) {
-        // TODO: Aufgabe 7.1
     	this.vertexValueBuffer = vertices;
     }
     
@@ -66,7 +64,6 @@ public class Geometry {
         glEnableVertexAttribArray(Util.ATTR_COLOR);
         glVertexAttribPointer(Util.ATTR_COLOR, 3, GL_FLOAT, false, ((3+3)*4), 3*4);
         
-        // TODO: Aufgabe 7.1
     }
     
     /**
@@ -75,7 +72,6 @@ public class Geometry {
      * das Vertexarray Object).
      */
     public void delete() {
-        // TODO: Aufgabe 7.1
     	glDeleteBuffers(ibid); //delete on graphic card
     	this.ibid = -1; //delete in program
     	glDeleteBuffers(vbid);
@@ -89,7 +85,6 @@ public class Geometry {
      * anschließend.
      */
     public void draw() {
-        // TODO: Aufgabe 7.1
     	if(vaid == -1)
     	{
     		this.construct();

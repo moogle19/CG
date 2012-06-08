@@ -528,9 +528,13 @@ public class Util {
      * @return Geometrie der Kugel
      */
     public static Geometry createSphere(float r, int n, int k, String imageFile) {
-        // TODO: Aufgabe 7.2
     	Geometry sphere = new Geometry();
     	float[] indi = new float[k*n*6+2*6];
+    	float[][][] image = getImageContents(imageFile); //[y][x][color]  0 < y < image.height 0 < x < image.width
+    	float dTheta = Util.PI / (k+1); //angle between z and horizontal scale
+    	float dPhi = Util.PI_MUL2 / (n); //angle between x and vetical scale
+    	int xcol, ycol, count = 0;
+    	float x,y,z,red,green,blue = 0f;
     	/*
     	 * x = r*sin(theta)*cos(phi) 
     	 * y = r*cos(theta)
@@ -541,14 +545,7 @@ public class Util {
     	 * phi = Winkel zwischen pos. x-Achse und r (n)
     	 * 
     	 */
-    	float[][][] image = getImageContents(imageFile); //[y][x][color]  0 < y < image.height 0 < x < image.width
-    	float dTheta = Util.PI / (k+1); //angle between z and horizontal scale
-    	float dPhi = Util.PI_MUL2 / (n); //angle between x and vetical scale
-    	// -r < x < r
-    	// -r < y < r
-    	int xcol, ycol;
-    	float x,y,z,red,green,blue;
-    	int count = 0;
+    	
     	for(int i = 0; i < k; i++)
     	{
     		for(int j = 0; j < n; j++)
@@ -572,6 +569,7 @@ public class Util {
     			indi[count++] = blue;
     		}
     	}
+    	// TODO: Make this look better
     	indi[k*n*6] = 0;
     	indi[k*n*6+1] = r;
     	indi[k*n*6+2] = 0;
@@ -583,6 +581,7 @@ public class Util {
     	indi[k*n*6+10] = 1;
     	
     	int[] index = new int[k*n+2];
+    	// TODO: Add right indexbuffer for triangles
     	for(int i = 0; i < k*n+2; i++)
     	{
     		index[i] = i;
