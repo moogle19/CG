@@ -554,9 +554,13 @@ public class Util {
     			y = (float) (r*Math.cos(dTheta+dTheta*j));
     			z = (float) (r*Math.sin(dTheta+dTheta*j)*Math.sin(dPhi*i));
 
-    			
+    			// TODO: Texture is not right (Upside down and sides changed)
     			ycol = (int)(((y+r)/(2*r))*(image.length-1)); // wert zwischen 0 und 1 in verhaeltnis x*r/d = xcol/image
-    			xcol = (int)(((x+r)/(2*r))*(image.length-1));
+    			if(z >= 0)
+    				xcol = (int)(((x+r)/(2*r))*(image[0].length-1))/2;
+    			else
+    				xcol = (int)(((x+r)/(2*r))*(image[0].length-1))/2+image[0].length/2;
+
     			red = image[ycol][xcol][0];
     			green = image[ycol][xcol][1];
     			blue = image[ycol][xcol][2];
