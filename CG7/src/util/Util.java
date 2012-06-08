@@ -12,6 +12,9 @@ import java.nio.IntBuffer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+
+import main.SolSystem;
+
 import org.lwjgl.BufferUtils;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector2f;
@@ -526,7 +529,73 @@ public class Util {
      */
     public static Geometry createSphere(float r, int n, int k, String imageFile) {
         // TODO: Aufgabe 7.2
-        return null;
+    	Geometry sphere = new Geometry();
+    	float[] indi = new float[k*n*6+2*6];
+    	/*
+    	 * x = r*sin(theta)*cos(phi) 
+    	 * y = r*cos(theta)
+    	 * z = r*sin(theta)*sin(phi)
+    	 * 
+    	 * 0 <= theta <= pi ; 0 <= phi < 2*pi
+    	 * theta = Winkel zwischen z-Achse und r (k)
+    	 * phi = Winkel zwischen pos. x-Achse und r (n)
+    	 * 
+    	 */
+    	float[][][] image = getImageContents(imageFile); //[y][x][color]  0 < y < image.height 0 < x < image.width
+    	float dTheta = Util.PI / (k+1); //angle between z and horizontal scale
+    	float dPhi = Util.PI_MUL2 / (n); //angle between x and vetical scale
+    	// -r < x < r
+    	// -r < y < r
+    	int xcol, ycol;
+    	float x,y,z,red,green,blue;
+    	int count = 0;
+    	for(int i = 0; i < k; i++)
+    	{
+    		for(int j = 0; j < n; j++)
+    		{
+    			x = (float) (r*Math.sin(dTheta+dTheta*j)*Math.cos(dPhi*i));
+    			y = (float) (r*Math.cos(dTheta+dTheta*j));
+    			z = (float) (r*Math.sin(dTheta+dTheta*j)*Math.sin(dPhi*i));
+
+    			
+    			ycol = (int)(((y+r)/(2*r))*(image.length-1)); // wert zwischen 0 und 1 in verhaeltnis x*r/d = xcol/image
+    			xcol = (int)(((x+r)/(2*r))*(image.length-1));
+    			red = image[ycol][xcol][0];
+    			green = image[ycol][xcol][1];
+    			blue = image[ycol][xcol][2];
+
+    			indi[count++] = x;
+    			indi[count++] = y;
+    			indi[count++] = z;
+    			indi[count++] = red;
+    			indi[count++] = green;
+    			indi[count++] = blue;
+    		}
+    	}
+    	indi[k*n*6] = 0;
+    	indi[k*n*6+1] = r;
+    	indi[k*n*6+2] = 0;
+    	indi[k*n*6+4] = 1;
+    	
+    	indi[k*n*6+6] = 0;
+    	indi[k*n*6+7] = -r;
+    	indi[k*n*6+8] = 0;
+    	indi[k*n*6+10] = 1;
+    	
+    	int[] index = new int[k*n+2];
+    	for(int i = 0; i < k*n+2; i++)
+    	{
+    		index[i] = i;
+    	}
+    	FloatBuffer indiBuffer = BufferUtils.createFloatBuffer(n*k*6+2*6);
+    	IntBuffer indexBuffer = BufferUtils.createIntBuffer(n*k+2);
+    	indexBuffer.put(index);
+    	indexBuffer.position(0);
+    	indiBuffer.put(indi);
+    	indiBuffer.position(0);
+    	sphere.setVertices(indiBuffer);
+    	sphere.setIndexBuffer(indexBuffer, 0);
+        return sphere;
     }
     
     /**

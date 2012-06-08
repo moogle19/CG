@@ -60,6 +60,12 @@ public class Geometry {
         glBindBuffer(GL_ARRAY_BUFFER, vbid);
         glBufferData(GL_ARRAY_BUFFER, vertexValueBuffer, GL_STATIC_DRAW);
         
+        glEnableVertexAttribArray(Util.ATTR_POS);
+        glVertexAttribPointer(Util.ATTR_POS, 3, GL_FLOAT, false, ((3+3)*4), 0);
+        
+        glEnableVertexAttribArray(Util.ATTR_COLOR);
+        glVertexAttribPointer(Util.ATTR_COLOR, 3, GL_FLOAT, false, ((3+3)*4), 3*4);
+        
         // TODO: Aufgabe 7.1
     }
     
@@ -70,9 +76,12 @@ public class Geometry {
      */
     public void delete() {
         // TODO: Aufgabe 7.1
-    	glDeleteBuffers(ibid);
+    	glDeleteBuffers(ibid); //delete on graphic card
+    	this.ibid = -1; //delete in program
     	glDeleteBuffers(vbid);
+    	this.vbid = -1;
     	glDeleteVertexArrays(vaid);
+    	vaid = -1;
     }
     
     /**
@@ -82,8 +91,9 @@ public class Geometry {
     public void draw() {
         // TODO: Aufgabe 7.1
     	if(vaid == -1)
+    	{
     		this.construct();
-    	
+    	}	
     	glDrawElements(this.topology, this.indexCount, GL_UNSIGNED_INT, 0);
     }
 }

@@ -32,9 +32,13 @@ public class SolSystem {
     private static final Camera cam = new Camera();
     private static boolean culling = true;
     private static boolean wireframe = true;
+    private static int bg = 512;
+    private static int lg = 512;
+    private static String image = "texture/earth.jpeg";
     
     public static void main(String[] argv) {
         try {
+        	earth = Util.createSphere(1, lg, bg, image);
             init();
             programID = Util.createShaderProgram("shader/Main_VS.glsl", "shader/VertexColor_FS.glsl");
             modelLocation = glGetUniformLocation(programID, "model");
@@ -97,6 +101,12 @@ public class SolSystem {
                     case Keyboard.KEY_F1: cam.changeProjection(); break;
                     case Keyboard.KEY_F2: glPolygonMode(GL_FRONT_AND_BACK, (wireframe ^= true) ? GL_FILL : GL_LINE); break;
                     case Keyboard.KEY_F3: if(culling ^= true) glEnable(GL_CULL_FACE); else glDisable(GL_CULL_FACE); break;
+                    case Keyboard.KEY_UP: if(bg <= 512){
+                    	earth.delete(); earth = Util.createSphere(1, bg*=2, lg*=2, image);
+                    }break;
+                    case Keyboard.KEY_DOWN: if(bg >= 4){
+                    	earth.delete(); earth = Util.createSphere(1, bg/=2, lg/=2, image);}
+                    break;   
                 }
             }
         }
