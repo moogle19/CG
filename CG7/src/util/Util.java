@@ -528,24 +528,25 @@ public class Util {
      * @return Geometrie der Kugel
      */
     public static Geometry createSphere(float r, int n, int k, String imageFile) {
-    	Geometry sphere = new Geometry();
-    	float[] indi = new float[k*n*6+2*6]; // k*n vertices *6 floats per vertex and north and south pole vertices 
+    	Geometry sphere = new Geometry(); //create new Geormetry for the sphere
+    	float[] verticies = new float[(k*n+2)*6]; // k*n vertices *6 floats per vertex and north and south pole vertices 
     	float[][][] image = getImageContents(imageFile); //[y][x][color]  0 < y < image.height 0 < x < image.width
     	float dTheta = Util.PI / (k+1); //angle between z and horizontal scale
     	float dPhi = Util.PI_MUL2 / (n); //angle between x and vetical scale
-    	int xcol, ycol, count = 0; //xcol/ycol = x/y coordinate for color
-    	float x,y,z,red,green,blue = 0f; //coordinates and color attributes
+    	int xcol = 0, ycol = 0, count = 0; //xcol/ycol = x/y coordinate for color
+    	float x = 0f, y = 0f, z = 0f, red = 0f, green = 0f, blue = 0f; //coordinates and color attributes
     	/*
     	 * x = r*sin(theta)*cos(phi) 
     	 * y = r*cos(theta)
     	 * z = r*sin(theta)*sin(phi)
     	 * 
     	 * 0 <= theta <= pi ; 0 <= phi < 2*pi
-    	 * theta = angle between z-Axis and r (k) 
+    	 * theta = angle between z-Axis and r (k)
     	 * phi = angle between pos. x-axis and r (n)
     	 * 
     	 */
-    	
+    	float xcolscale = image[0].length / (float)n;
+    	float ycolscale = image.length / (float)k;
     	for(int i = 0; i < k; i++)
     	{
     		for(int j = 0; j < n; j++)
@@ -554,35 +555,31 @@ public class Util {
     			y = (float) (r*Math.cos(dTheta+dTheta*j));
     			z = (float) (r*Math.sin(dTheta+dTheta*j)*Math.sin(dPhi*i));
 
-    			// TODO: Texture is not right (Upside down and sides changed)
-    			ycol = (int)(((y+r)/(2*r))*(image.length-1)); // value between 0 and 1 | ratio: x*r/d = xcol/image
-    			if(z >= 0)
-    				xcol = (int)(((x+r)/(2*r))*(image[0].length-1))/2;
-    			else
-    				xcol = (int)(((x+r)/(2*r))*(image[0].length-1))/2+image[0].length/2;
+    			xcol = (int)(xcolscale * i);
+    			ycol = (int)(ycolscale * j);
 
     			red = image[ycol][xcol][0];
     			green = image[ycol][xcol][1];
     			blue = image[ycol][xcol][2];
-
-    			indi[count++] = x;
-    			indi[count++] = y;
-    			indi[count++] = z;
-    			indi[count++] = red;
-    			indi[count++] = green;
-    			indi[count++] = blue;
+    			
+    			verticies[count++] = x;
+    			verticies[count++] = y;
+    			verticies[count++] = z;
+    			verticies[count++] = red;
+    			verticies[count++] = green;
+    			verticies[count++] = blue;
     		}
     	}
     	// TODO: Make this look better
-    	indi[k*n*6] = 0; //northpole vertex
-    	indi[k*n*6+1] = r;
-    	indi[k*n*6+2] = 0;
-    	indi[k*n*6+4] = 1;
+    	verticies[k*n*6] = 0; //northpole vertex
+    	verticies[k*n*6+1] = r;
+    	verticies[k*n*6+2] = 0;
+    	verticies[k*n*6+4] = 1;
     	
-    	indi[k*n*6+6] = 0; //southpole vertex
-    	indi[k*n*6+7] = -r;
-    	indi[k*n*6+8] = 0;
-    	indi[k*n*6+10] = 1;
+    	verticies[k*n*6+6] = 0; //southpole vertex
+    	verticies[k*n*6+7] = -r;
+    	verticies[k*n*6+8] = 0;
+    	verticies[k*n*6+10] = 1;
     	
     	int[] index = new int[k*n+2];
     	// TODO: Add right indexbuffer for triangles
@@ -594,7 +591,7 @@ public class Util {
     	IntBuffer indexBuffer = BufferUtils.createIntBuffer(n*k+2);
     	indexBuffer.put(index);
     	indexBuffer.position(0);
-    	indiBuffer.put(indi);
+    	indiBuffer.put(verticies);
     	indiBuffer.position(0);
     	sphere.setVertices(indiBuffer);
     	sphere.setIndexBuffer(indexBuffer, 0);
