@@ -36,6 +36,8 @@ public class SolSystem {
     private static int bg = 256;
     private static int lg = 256;
     private static String image = "texture/earth.jpeg";
+    private static float rotangle;
+    private static float rotspeed = 0.001f;
     
     public static void main(String[] argv) {
         try {
@@ -72,9 +74,12 @@ public class SolSystem {
             Display.sync(60);
             
             now = System.currentTimeMillis();
+            if((rotangle += (float)( rotspeed * (now - last))) >= Util.PI_MUL2)
+            	rotangle = Util.PI_MUL2 - rotangle;
             handleInput(now - last);
             updateUniforms();
             last = now;
+            
         }
     }
     
@@ -107,8 +112,10 @@ public class SolSystem {
                     	earth.delete(); earth = Util.createSphere(1, bg*=2, lg*=2, image);
                     }break;
                     case Keyboard.KEY_DOWN: if(bg > 2){
-                    	earth.delete(); earth = Util.createSphere(1, bg/=2, lg/=2, image);}
-                    break;   
+                    	earth.delete(); earth = Util.createSphere(1, bg/=2, lg/=2, image);
+                    }break;   
+                    case Keyboard.KEY_LEFT: rotspeed /= 2f;break;
+                    case Keyboard.KEY_RIGHT: rotspeed *= 2f;break;
                 }
             }
         }
@@ -129,6 +136,7 @@ public class SolSystem {
     
     public static void updateUniforms() {
         Matrix4f viewProj = Matrix4f.mul(cam.getProjection(), cam.getView(), null);
+        Util.mul(modelMatrix, Util.rotationZ(Util.PI_DIV4 / 2f, null), Util.rotationY(rotangle, null));
         viewProj.store(Util.MAT_BUFFER);
         Util.MAT_BUFFER.position(0);
         int viewProjLoc = glGetUniformLocation(programID, "viewProj");
