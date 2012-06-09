@@ -15,6 +15,8 @@ import javax.imageio.ImageIO;
 
 import main.SolSystem;
 
+import opengl.GL;
+
 import org.lwjgl.BufferUtils;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector2f;
@@ -547,6 +549,15 @@ public class Util {
     	 */
     	float xcolscale = image[0].length / (float)n;
     	float ycolscale = image.length / (float)k;
+    	int countindex = 0;
+    	vertices[count++] = 0; //northpole vertex
+    	vertices[count++] = r;
+    	vertices[count++] = 0;
+    	vertices[count++] = image[0][0][0];
+    	vertices[count++] = image[0][0][1];
+    	vertices[count++] = image[0][0][2];
+    	
+    	int[] index = new int[k*n*2+k+2];
     	for(int i = 0; i < k; i++)
     	{
     		for(int j = 0; j < n; j++)
@@ -568,15 +579,23 @@ public class Util {
     			vertices[count++] = red;
     			vertices[count++] = green;
     			vertices[count++] = blue;
+    			
+    			index[countindex++] = j + n*i;
+    			if(i < (k-1)){
+    				index[countindex++] = j + n*(i+1);
+    			}
+    			else{
+    				index[countindex++] = j;
+    			}
+    			
     		}
+    		index[countindex++] = -1;
+    	}
+    	for(int i = k*n*2-10; i < k*n*2; i++){
+    		System.out.println(index[i]);
     	}
     	// set north and south pole vertices
-    	vertices[k*n*6] = 0; //northpole vertex
-    	vertices[k*n*6+1] = r;
-    	vertices[k*n*6+2] = 0;
-    	vertices[k*n*6+3] = image[0][0][0];
-    	vertices[k*n*6+4] = image[0][0][1];
-    	vertices[k*n*6+5] = image[0][0][2];
+    	
     	
     	vertices[k*n*6+6] = 0; //southpole vertex
     	vertices[k*n*6+7] = -r;
@@ -585,20 +604,19 @@ public class Util {
     	vertices[k*n*6+10] = image[image.length-1][image[0].length-1][1];
     	vertices[k*n*6+11] = image[image.length-1][image[0].length-1][2];
     	
-    	int[] index = new int[k*n+2];
     	// TODO: Add right indexbuffer for triangles
-    	for(int i = 0; i < k*n+2; i++)
+    	/*for(int i = 0; i < k*n+2; i++)
     	{
     		index[i] = i;
-    	}
+    	}*/
     	FloatBuffer indiBuffer = BufferUtils.createFloatBuffer(n*k*6+2*6);
-    	IntBuffer indexBuffer = BufferUtils.createIntBuffer(n*k+2);
+    	IntBuffer indexBuffer = BufferUtils.createIntBuffer(k*n*2+k+2);
     	indexBuffer.put(index);
     	indexBuffer.position(0);
     	indiBuffer.put(vertices);
     	indiBuffer.position(0);
     	sphere.setVertices(indiBuffer);
-    	sphere.setIndexBuffer(indexBuffer, 0);
+    	sphere.setIndexBuffer(indexBuffer, GL.GL_TRIANGLE_STRIP);
         return sphere;
     }
     
