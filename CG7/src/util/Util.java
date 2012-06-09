@@ -557,9 +557,10 @@ public class Util {
     	vertices[count++] = image[0][0][1];
     	vertices[count++] = image[0][0][2];
     	
-    	int[] index = new int[k*n*2+k+2];
+    	int[] index = new int[k*n*2+k*4];
     	for(int i = 0; i < k; i++)
     	{
+    		index[countindex++] = 0;
     		for(int j = 0; j < n; j++)
     		{
     			x = (float) (r*Math.sin(dTheta+dTheta*j)*Math.cos(dPhi*i));
@@ -581,15 +582,16 @@ public class Util {
     			vertices[count++] = blue;
     			
     			//TODO: Index isn't quite correct
-    			index[countindex++] = j + n*i;
+    			index[countindex++] = j + n*i +1;
     			if(i < (k-1)){
-    				index[countindex++] = j + n*(i+1);
+    				index[countindex++] = j + n*(i+1) +1;
     			}
     			else{
-    				index[countindex++] = j;
+    				index[countindex++] = j +1;
     			}
     			
     		}
+    		index[countindex++] = k*n+1;
     		index[countindex++] = -1;
     	}    	
     	
@@ -606,7 +608,7 @@ public class Util {
     		index[i] = i;
     	}*/
     	FloatBuffer indiBuffer = BufferUtils.createFloatBuffer(n*k*6+2*6);
-    	IntBuffer indexBuffer = BufferUtils.createIntBuffer(k*n*2+k+2);
+    	IntBuffer indexBuffer = BufferUtils.createIntBuffer(k*n*2+k*4);
     	indexBuffer.put(index);
     	indexBuffer.position(0);
     	indiBuffer.put(vertices);
