@@ -529,7 +529,7 @@ public class Util {
      */
     public static Geometry createSphere(float r, int n, int k, String imageFile) {
     	Geometry sphere = new Geometry(); //create new Geormetry for the sphere
-    	float[] verticies = new float[(k*n+2)*6]; // k*n vertices *6 floats per vertex and north and south pole vertices 
+    	float[] vertices= new float[(k*n+2)*6]; // k*n vertices *6 floats per vertex and north and south pole vertices 
     	float[][][] image = getImageContents(imageFile); //[y][x][color]  0 < y < image.height 0 < x < image.width
     	float dTheta = Util.PI / (k+1); //angle between z and horizontal scale
     	float dPhi = Util.PI_MUL2 / (n); //angle between x and vetical scale
@@ -562,24 +562,28 @@ public class Util {
     			green = image[ycol][xcol][1];
     			blue = image[ycol][xcol][2];
     			
-    			verticies[count++] = x;
-    			verticies[count++] = y;
-    			verticies[count++] = z;
-    			verticies[count++] = red;
-    			verticies[count++] = green;
-    			verticies[count++] = blue;
+    			vertices[count++] = x;
+    			vertices[count++] = y;
+    			vertices[count++] = z;
+    			vertices[count++] = red;
+    			vertices[count++] = green;
+    			vertices[count++] = blue;
     		}
     	}
-    	// TODO: Make this look better
-    	verticies[k*n*6] = 0; //northpole vertex
-    	verticies[k*n*6+1] = r;
-    	verticies[k*n*6+2] = 0;
-    	verticies[k*n*6+4] = 1;
+    	// set north and south pole vertices
+    	vertices[k*n*6] = 0; //northpole vertex
+    	vertices[k*n*6+1] = r;
+    	vertices[k*n*6+2] = 0;
+    	vertices[k*n*6+3] = image[0][0][0];
+    	vertices[k*n*6+4] = image[0][0][1];
+    	vertices[k*n*6+5] = image[0][0][2];
     	
-    	verticies[k*n*6+6] = 0; //southpole vertex
-    	verticies[k*n*6+7] = -r;
-    	verticies[k*n*6+8] = 0;
-    	verticies[k*n*6+10] = 1;
+    	vertices[k*n*6+6] = 0; //southpole vertex
+    	vertices[k*n*6+7] = -r;
+    	vertices[k*n*6+8] = 0;
+    	vertices[k*n*6+9] = image[image.length-1][image[0].length-1][0];
+    	vertices[k*n*6+10] = image[image.length-1][image[0].length-1][1];
+    	vertices[k*n*6+11] = image[image.length-1][image[0].length-1][2];
     	
     	int[] index = new int[k*n+2];
     	// TODO: Add right indexbuffer for triangles
@@ -591,7 +595,7 @@ public class Util {
     	IntBuffer indexBuffer = BufferUtils.createIntBuffer(n*k+2);
     	indexBuffer.put(index);
     	indexBuffer.position(0);
-    	indiBuffer.put(verticies);
+    	indiBuffer.put(vertices);
     	indiBuffer.position(0);
     	sphere.setVertices(indiBuffer);
     	sphere.setIndexBuffer(indexBuffer, 0);
