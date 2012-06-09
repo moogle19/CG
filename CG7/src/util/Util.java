@@ -580,6 +580,7 @@ public class Util {
     			vertices[count++] = green;
     			vertices[count++] = blue;
     			
+    			//TODO: Index isn't quite correct
     			index[countindex++] = j + n*i;
     			if(i < (k-1)){
     				index[countindex++] = j + n*(i+1);
@@ -590,12 +591,7 @@ public class Util {
     			
     		}
     		index[countindex++] = -1;
-    	}
-    	for(int i = k*n*2-10; i < k*n*2; i++){
-    		System.out.println(index[i]);
-    	}
-    	// set north and south pole vertices
-    	
+    	}    	
     	
     	vertices[k*n*6+6] = 0; //southpole vertex
     	vertices[k*n*6+7] = -r;
