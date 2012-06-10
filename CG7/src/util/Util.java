@@ -581,14 +581,13 @@ public class Util {
     			vertices[count++] = green;
     			vertices[count++] = blue;
     			
-    			//TODO: Index isn't quite correct
-    			index[countindex++] = j + n*i +1;
     			if(i < (k-1)){
-    				index[countindex++] = j + n*(i+1) +1;
+    				index[countindex++] = j + n*(i+1) + 1;
     			}
     			else{
-    				index[countindex++] = j +1;
+    				index[countindex++] = j + 1;
     			}
+    			index[countindex++] = j + n*i + 1;
     			
     		}
     		index[countindex++] = k*n+1;
@@ -602,18 +601,16 @@ public class Util {
     	vertices[k*n*6+10] = image[image.length-1][image[0].length-1][1];
     	vertices[k*n*6+11] = image[image.length-1][image[0].length-1][2];
     	
-    	// TODO: Add right indexbuffer for triangles
-    	/*for(int i = 0; i < k*n+2; i++)
-    	{
-    		index[i] = i;
-    	}*/
-    	FloatBuffer indiBuffer = BufferUtils.createFloatBuffer(n*k*6+2*6);
+    	FloatBuffer vertexBuffer = BufferUtils.createFloatBuffer(n*k*6+2*6);
     	IntBuffer indexBuffer = BufferUtils.createIntBuffer(k*n*2+k*4);
+    	
     	indexBuffer.put(index);
     	indexBuffer.position(0);
-    	indiBuffer.put(vertices);
-    	indiBuffer.position(0);
-    	sphere.setVertices(indiBuffer);
+    	
+    	vertexBuffer.put(vertices);
+    	vertexBuffer.position(0);
+    	
+    	sphere.setVertices(vertexBuffer);
     	sphere.setIndexBuffer(indexBuffer, GL.GL_TRIANGLE_STRIP);
         return sphere;
     }

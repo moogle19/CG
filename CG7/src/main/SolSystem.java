@@ -60,7 +60,6 @@ public class SolSystem {
         glClearColor(0.1f, 0.0f, 0.0f, 1.0f); // dark red
         long last = System.currentTimeMillis();
         long now;
-        // TODO: Add rotation for earth
         while(bContinue && !Display.isCloseRequested()) {            
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
             glUseProgram(programID);
