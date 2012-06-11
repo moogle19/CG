@@ -566,7 +566,8 @@ public class Util {
     			x = (float) (r*Math.sin(dTheta+dTheta*j)*Math.cos(dPhi*i));
     			y = (float) (r*Math.cos(dTheta+dTheta*j));
     			z = (float) (r*Math.sin(dTheta+dTheta*j)*Math.sin(dPhi*i));
-
+    			
+    			//TODO: Color doesnt work if bg != lg
     			xcol = (int)(xcolscale * i);
     			ycol = (int)(ycolscale * j);
 
