@@ -534,7 +534,7 @@ public class Util {
     	float[] vertices= new float[(k*n+2)*6]; // k*n vertices *6 floats per vertex and north and south pole vertices 
     	float[][][] image = getImageContents(imageFile); //[y][x][color]  0 < y < image.height 0 < x < image.width
     	float dTheta = Util.PI / (n+1); //angle between z and horizontal scale
-    	float dPhi = Util.PI_MUL2 / (k); //angle between x and vetical scale
+    	float dPhi = Util.PI_MUL2 / k; //angle between x and vetical scale
     	int xcol = 0, ycol = 0, count = 0; //xcol/ycol = x/y coordinate for color
     	float x = 0f, y = 0f, z = 0f, red = 0f, green = 0f, blue = 0f; //coordinates and color attributes
     	/*
