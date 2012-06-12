@@ -5,7 +5,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 /**
  *
- * @author Sascha Kolodzey, Nico Marniok
+ * @author nico3000
  */
 public final class Camera {
     private float phi = 0, theta = 0;
@@ -15,7 +15,7 @@ public final class Camera {
     private final Vector3f camPos = new Vector3f(0,0,-1);
     private final Matrix4f view = new Matrix4f();
     private final Matrix4f projection = new Matrix4f();
-    private boolean perspective = false;
+    private boolean perspective = true;
 
     /**
      * Default Constructor.
@@ -31,18 +31,15 @@ public final class Camera {
      * @param dTheta vertikale Rotation
      */
     public void rotate(float dPhi, float dTheta) {
-    	this.phi += dPhi;
-    	this.theta += dTheta;
-    	if(theta > Util.PI_DIV2) //beschraenkt die bewegung der kamera nach unten auf 90grad
-    		theta = Util.PI_DIV2;
-    	else if(theta < -Util.PI_DIV2) //beschraenkt sicht nach oben um 90grad
-    		theta = -Util.PI_DIV2;
-    	Matrix4f rotX = Util.rotationX(this.theta, null);
-    	Matrix4f rotY = Util.rotationY(this.phi, null);
-    	Matrix4f rot = Util.mul(null, rotY, rotX);
-    	Util.transformDir(rot, new Vector3f(1,0,0), this.sideDir);
-    	Util.transformDir(rot, new Vector3f(0,1,0), this.upDir);
-    	Util.transformDir(rot, new Vector3f(0,0,1), this.viewDir);
+        phi += dPhi;
+        theta = Util.clamp(theta + dTheta, -Util.PI_DIV2, +Util.PI_DIV2);
+        
+        Matrix4f rotX = Util.rotationX(theta, null);
+        Matrix4f rotY = Util.rotationY(phi, null);
+        Matrix4f rot = Util.mul(null, rotY, rotX);
+        Util.transformDir(rot, new Vector3f(1, 0, 0), sideDir);
+        Util.transformDir(rot, new Vector3f(0, 1, 0), upDir);
+        Util.transformDir(rot, new Vector3f(0, 0, 1), viewDir);
     }
     
     /**
@@ -52,16 +49,17 @@ public final class Camera {
      * @param ud Bewegung nach oben/unten
      */
     public void move(float fb, float lr, float ud) {
-    	this.camPos.x += this.sideDir.x * lr + this.viewDir.x * fb;
-    	this.camPos.y += this.sideDir.y * lr + this.viewDir.y * fb + ud;
-    	this.camPos.z += this.sideDir.z * lr + this.viewDir.z * fb;
+        camPos.x += fb * viewDir.x + lr * sideDir.x;
+        camPos.y += fb * viewDir.y + lr * sideDir.y + ud;
+        camPos.z += fb * viewDir.z + lr * sideDir.z;
     }
     
     /**
      * Aktualisiert die Viewmatrix.
      */
     public void updateView() {
-    	Util.lookAtRH(this.camPos, Vector3f.add(this.camPos, this.viewDir, null), this.upDir, view);
+        Vector3f lookAt = Vector3f.add(camPos, viewDir, null);
+        Util.lookAtRH(camPos, lookAt, upDir, view);
     }
     
     /**
@@ -99,4 +97,5 @@ public final class Camera {
         this.updateView();
         return view;
     }
+    
 }

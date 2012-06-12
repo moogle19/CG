@@ -2,15 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
-	<classpathentry kind="lib" path="/Users/kevin/Documents/Uni/4.Semester/Computergrafik/lwjgl-2.8.3/jar/lwjgl.jar">
-		<attributes>
-			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="/Users/kevin/Documents/Uni/4.Semester/Computergrafik/lwjgl-2.8.3/native/macosx"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="/Users/kevin/Documents/Uni/4.Semester/Computergrafik/lwjgl-2.8.3/jar/lwjgl_util.jar">
-		<attributes>
-			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="/Users/kevin/Documents/Uni/4.Semester/Computergrafik/lwjgl-2.8.3/native/macosx"/>
-		</attributes>
-	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Computergrafik"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
