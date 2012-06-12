@@ -547,8 +547,8 @@ public class Util {
     	 * phi = angle between pos. x-axis and r (n)
     	 * 
     	 */
-    	float xcolscale = image[0].length / (float)n;
-    	float ycolscale = image.length / (float)k;
+    	float xcolscale = image[0].length / (float)k;
+    	float ycolscale = image.length / (float)n;
     	int countindex = 0;
     	vertices[count++] = 0; //northpole vertex
     	vertices[count++] = r;
@@ -557,7 +557,7 @@ public class Util {
     	vertices[count++] = image[0][0][1];
     	vertices[count++] = image[0][0][2];
     	
-    	int[] index = new int[k*n*2+k*4];
+    	int[] index = new int[k*n*2+k*3];
     	for(int i = 0; i < k; i++)
     	{
     		index[countindex++] = 0;
@@ -574,6 +574,10 @@ public class Util {
     			red = image[ycol][xcol][0];
     			green = image[ycol][xcol][1];
     			blue = image[ycol][xcol][2];
+    			
+    			/*red = 0;
+    			blue = 0;
+    			green = 1;*/
     			
     			vertices[count++] = x;
     			vertices[count++] = y;
@@ -593,17 +597,17 @@ public class Util {
     		}
     		index[countindex++] = k*n+1;
     		index[countindex++] = -1;
-    	}    	
+    	} 
+    	    	
+    	vertices[(k*n+1)*6] = 0; //southpole vertex
+    	vertices[(k*n+1)*6+1] = -r;
+    	vertices[(k*n+1)*6+2] = 0;
+    	vertices[(k*n+1)*6+3] = image[image.length-1][image[0].length-1][0];
+    	vertices[(k*n+1)*6+4] = image[image.length-1][image[0].length-1][1];
+    	vertices[(k*n+1)*6+5] = image[image.length-1][image[0].length-1][2];
     	
-    	vertices[k*n*6+6] = 0; //southpole vertex
-    	vertices[k*n*6+7] = -r;
-    	vertices[k*n*6+8] = 0;
-    	vertices[k*n*6+9] = image[image.length-1][image[0].length-1][0];
-    	vertices[k*n*6+10] = image[image.length-1][image[0].length-1][1];
-    	vertices[k*n*6+11] = image[image.length-1][image[0].length-1][2];
-    	
-    	FloatBuffer vertexBuffer = BufferUtils.createFloatBuffer(n*k*6+2*6);
-    	IntBuffer indexBuffer = BufferUtils.createIntBuffer(k*n*2+k*4);
+    	FloatBuffer vertexBuffer = BufferUtils.createFloatBuffer((n*k+2)*6);
+    	IntBuffer indexBuffer = BufferUtils.createIntBuffer(k*n*2+k*3);
     	
     	indexBuffer.put(index);
     	indexBuffer.position(0);
