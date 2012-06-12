@@ -34,7 +34,7 @@ public class SolSystem {
     private static boolean culling = true;
     private static boolean wireframe = true;
     private static int bg = 256;
-    private static int lg = 256;
+    private static int lg = 512;
     private static String image = "texture/earth.jpeg";
     private static float rotangle;
     private static float rotspeed = 0.001f;
@@ -108,10 +108,10 @@ public class SolSystem {
                     case Keyboard.KEY_F2: glPolygonMode(GL_FRONT_AND_BACK, (wireframe ^= true) ? GL_FILL : GL_LINE); break;
                     case Keyboard.KEY_F3: if(culling ^= true) glEnable(GL_CULL_FACE); else glDisable(GL_CULL_FACE); break;
                     //TODO: if bg/lg = 2048 java.lang.OutOfMemoryError: Java heap space
-                    case Keyboard.KEY_UP: if(bg < 1024){
+                    case Keyboard.KEY_UP: if(lg < 2048){
                     	earth.delete(); earth = Util.createSphere(1, bg*=2, lg*=2, image);
                     }break;
-                    case Keyboard.KEY_DOWN: if(bg > 2){
+                    case Keyboard.KEY_DOWN: if(lg > 2){
                     	earth.delete(); earth = Util.createSphere(1, bg/=2, lg/=2, image);
                     }break;   
                     case Keyboard.KEY_LEFT: rotspeed /= 2f;break;
