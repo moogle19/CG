@@ -9,6 +9,5 @@ in vec4 fragementColor2;
 out vec4 fragmentColor;
 
 void main(void) {
-    mix();
-
+    fragmentColor = fragmentColor1;
 }

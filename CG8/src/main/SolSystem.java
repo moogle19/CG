@@ -7,11 +7,16 @@ package main;
 import static opengl.GL.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import opengl.GL;
+
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 import util.Camera;
 import util.Geometry;
@@ -29,6 +34,7 @@ public class SolSystem {
     // geometries
     private static Geometry earth = null;
     private static Geometry moon = null;
+    private static Geometry clouds = null;
     private static int earthFineness = 0;
 
     // current configurations
@@ -47,11 +53,14 @@ public class SolSystem {
     // uniform locations
     private static int modelLoc;
     private static int viewProjLoc;
+    private static int inverseLightDirectionLoc;
     
     // uniform data
     private static final Matrix4f earthModelMatrix = new Matrix4f();
     private static final Matrix4f moonModelMatrix = new Matrix4f();
+    private static final Matrix4f cloudModelMatrix = new Matrix4f();
     private static final Matrix4f viewProjMatrix = new Matrix4f();
+    private static final Vector3f inverseLightDirection = new Vector3f(0, 0, 1);
     
     // temp data
     private static final Matrix4f moonRotation = new Matrix4f();
@@ -67,8 +76,10 @@ public class SolSystem {
             glCullFace(GL_BACK);
             glEnable(GL_DEPTH_TEST);
             
-            shaderProgram = Util.createShaderProgram("./shader/Main_VS.glsl", "./shader/VertexColor_FS.glsl");
+            //shaderProgram = Util.createShaderProgram("./shader/Main_VS.glsl", "./shader/VertexColor_FS.glsl");
 
+            shaderProgram = Util.createShaderProgram("./shader/FragmentMixing_VS.glsl", "./shader/FragmentMixing_FS.glsl");
+            
             cam.move(-5.0f, 0.0f, 0.0f);
             changeFineness(32);
             
@@ -118,6 +129,14 @@ public class SolSystem {
             // moon
             matrix2uniform(moonModelMatrix, modelLoc);
             moon.draw();
+            
+            glEnable(GL_BLEND); //enable cloud blending
+            glBlendFunc(GL_ONE, GL11.GL_SRC_ALPHA);
+            
+            // clouds
+            matrix2uniform(cloudModelMatrix, modelLoc);
+            clouds.draw();
+            glDisable(GL_BLEND); //disable blending
 
             // present screen
             Display.update();
@@ -203,6 +222,18 @@ public class SolSystem {
     }
     
     /**
+     * Hilfsmethode, um einen Vector in eine Uniform zu schreiben. Das
+     * zugehoerige Programmobjekt muss aktiv sein.
+     * @param matrix Quellvektor
+     * @param uniform Ziellocation
+     */
+    private static void vector3f2uniform(Vector3f vector, int uniform) {
+        vector.store(Util.MAT_BUFFER);
+        Util.MAT_BUFFER.position(0);
+        glUniform3f(uniform, vector.x, vector.y, vector.z);
+    }
+    
+    /**
      * Aktualisiert Model Matrizen der Erde und des Mondes.
      * @param millis Millisekunden, die seit dem letzten Aufruf vergangen sind.
      */
@@ -213,6 +244,10 @@ public class SolSystem {
         // earth
         float earthRotationAngle = Util.PI_MUL2 * ingameTime;
         Util.rotationY(earthRotationAngle, earthModelMatrix);
+        
+        // clouds
+        float cloudRotationAngle = earthRotationAngle / 2.0f;
+        Util.rotationY((cloudRotationAngle-Util.PI), cloudModelMatrix);
         
         // moon
         float moonRotationAngle = earthRotationAngle / 27.0f;
@@ -232,8 +267,12 @@ public class SolSystem {
             if(moon != null) {
                 moon.delete();
             }
+            if(clouds != null) {
+            	clouds.delete();
+            }
             earth = GeometryFactory.createSphere(1.0f, newFineness, newFineness/2, "textures/earth.jpeg", "textures/earth_night.jpeg");
             moon = GeometryFactory.createSphere(0.5f, newFineness/2, newFineness/4, "textures/moon.jpeg", "textures/moon.jpeg");
+            clouds = GeometryFactory.createSphere(1.05f, newFineness, newFineness/2, "textures/clouds.jpeg", "textures/clouds.jpeg");
             earthFineness = newFineness;
         }
     }
@@ -246,6 +285,9 @@ public class SolSystem {
         glUseProgram(program);        
         modelLoc = glGetUniformLocation(program, "model");
         viewProjLoc = glGetUniformLocation(program, "viewProj");
-        matrix2uniform(viewProjMatrix, viewProjLoc);      
+        matrix2uniform(viewProjMatrix, viewProjLoc);
+        inverseLightDirectionLoc = glGetUniformLocation(program, "inverseLightDirection");
+        vector3f2uniform(inverseLightDirection, inverseLightDirectionLoc);
+        
     }
 }
