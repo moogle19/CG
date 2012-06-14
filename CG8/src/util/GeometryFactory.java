@@ -4,6 +4,7 @@ import static opengl.GL.*;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import org.lwjgl.BufferUtils;
+import org.lwjgl.util.vector.Vector3f;
 
 /**
  * Stellt Methoden zur Erzeugung von Geometrie bereit.
@@ -19,14 +20,16 @@ public class GeometryFactory {
      * @param imageFile Pfad zu einer Bilddatei
      * @return Geometrie der Kugel
      */
-    public static Geometry createSphere(float r, int n, int k, String imageFile) {
+    public static Geometry createSphere(float r, int n, int k, String imageFile, String nightImageFile) {
         float[][][] image = Util.getImageContents(imageFile);
+        float[][][] nightImage = Util.getImageContents(nightImageFile);
         
-        FloatBuffer fb = BufferUtils.createFloatBuffer((3+3) * (n+1)*(k+1));
+        FloatBuffer fb = BufferUtils.createFloatBuffer((3+3+4+4) * (n+1)*(k+1));
         
         float dTheta = Util.PI / (float)k;
         float dPhi = Util.PI_MUL2 / (float)n;
         float theta = 0;
+        Vector3f norm;
         for(int j=0; j <= k; ++j) {
             float sinTheta = (float)Math.sin(theta);
             float cosTheta = (float)Math.cos(theta);
@@ -39,8 +42,18 @@ public class GeometryFactory {
                 fb.put(r*cosTheta);
                 fb.put(r*sinTheta*sinPhi);
                 
+                norm = new Vector3f(r*sinTheta*cosPhi, r*cosTheta, r*sinTheta*sinPhi);
+                norm.normalise();
+                
+                fb.put(norm.x);
+                fb.put(norm.y);
+                fb.put(norm.z);
+                
                 fb.put(image[(int)((theta / Util.PI) * (float)image.length) % image.length]
                             [(int)(phi / Util.PI_MUL2 * (float)image[0].length) % image[0].length]);
+                
+                fb.put(nightImage[(int)((theta / Util.PI) * (float)image.length) % image.length]
+                        [(int)(phi / Util.PI_MUL2 * (float)image[0].length) % image[0].length]);
                 
                 phi += dPhi;
             }

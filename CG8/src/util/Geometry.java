@@ -61,10 +61,14 @@ public class Geometry {
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, this.indexValueBuffer, GL_STATIC_DRAW);
         
         glEnableVertexAttribArray(Util.ATTR_POS);
+        glEnableVertexAttribArray(Util.ATTR_NORMAL);
         glEnableVertexAttribArray(Util.ATTR_COLOR);
+        glEnableVertexAttribArray(Util.ATTR_COLOR2);
 
-        glVertexAttribPointer(Util.ATTR_POS, 3, GL_FLOAT, false, 24, 0);
-        glVertexAttribPointer(Util.ATTR_COLOR, 3, GL_FLOAT, false, 24, 12);
+        glVertexAttribPointer(Util.ATTR_POS, 3, GL_FLOAT, false, 14*4, 0);
+        glVertexAttribPointer(Util.ATTR_NORMAL, 3, GL_FLOAT, true,14*4, 3*4);
+        glVertexAttribPointer(Util.ATTR_COLOR, 4, GL_FLOAT, false, 14*4, 6*4);
+        glVertexAttribPointer(Util.ATTR_COLOR2, 4, GL_FLOAT, false, 14*4, 10*4);
     }
     
     /**

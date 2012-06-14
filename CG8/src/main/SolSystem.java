@@ -225,15 +225,15 @@ public class SolSystem {
      * @param newFineness die neue Feinheit
      */
     private static void changeFineness(int newFineness) {
-        if(newFineness >= 4 && newFineness <= 8192) {
+        if(newFineness >= 4 && newFineness <= 1024) {
             if(earth != null) {
                 earth.delete();
             }
             if(moon != null) {
                 moon.delete();
             }
-            earth = GeometryFactory.createSphere(1.0f, newFineness, newFineness/2, "earth.jpg");
-            moon = GeometryFactory.createSphere(0.5f, newFineness/2, newFineness/4, "moon.jpg");
+            earth = GeometryFactory.createSphere(1.0f, newFineness, newFineness/2, "earth.jpeg", "earth_night.jpeg");
+            moon = GeometryFactory.createSphere(0.5f, newFineness/2, newFineness/4, "moon.jpeg", "moon.jpeg");
             earthFineness = newFineness;
         }
     }

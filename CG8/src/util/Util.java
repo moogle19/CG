@@ -549,6 +549,11 @@ public class Util {
     public static final int ATTR_COLOR = 2;
     
     /**
+     * Attribut Index von vertexColor bei Nacht
+     */
+    public static final int ATTR_COLOR2 = 3;
+    
+    /**
      * Erzeugt ein ShaderProgram aus einem Vertex- und Fragmentshader.
      * @param vs Pfad zum Vertexshader
      * @param fs Pfad zum Fragmentshader
@@ -581,6 +586,7 @@ public class Util {
         glBindAttribLocation(programID, ATTR_POS, "positionMC");
         glBindAttribLocation(programID, ATTR_NORMAL, "normalMC");        
         glBindAttribLocation(programID, ATTR_COLOR, "vertexColor");
+        glBindAttribLocation(programID, ATTR_COLOR2, "vertexColor2");
         
         glLinkProgram(programID);        
         
@@ -607,13 +613,14 @@ public class Util {
         }
         try {
             BufferedImage image = ImageIO.read(file);
-            float[][][] result = new float[image.getHeight()][image.getWidth()][3];
+            float[][][] result = new float[image.getHeight()][image.getWidth()][4];
             for(int y=0; y < image.getHeight(); ++y) {
                 for(int x=0; x < image.getWidth(); ++x) {
                     Color c = new Color(image.getRGB(image.getWidth() - 1 - x, y));
                     result[y][x][0] = (float)c.getRed() / 255.0f;
                     result[y][x][1] = (float)c.getGreen() / 255.0f;
                     result[y][x][2] = (float)c.getBlue() / 255.0f;
+                    result[y][x][3] = (float)c.getAlpha() / 255f;
                 }
             }
             return result;
