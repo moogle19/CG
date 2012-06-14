@@ -232,8 +232,8 @@ public class SolSystem {
             if(moon != null) {
                 moon.delete();
             }
-            earth = GeometryFactory.createSphere(1.0f, newFineness, newFineness/2, "earth.jpeg", "earth_night.jpeg");
-            moon = GeometryFactory.createSphere(0.5f, newFineness/2, newFineness/4, "moon.jpeg", "moon.jpeg");
+            earth = GeometryFactory.createSphere(1.0f, newFineness, newFineness/2, "textures/earth.jpeg", "textures/earth_night.jpeg");
+            moon = GeometryFactory.createSphere(0.5f, newFineness/2, newFineness/4, "textures/moon.jpeg", "textures/moon.jpeg");
             earthFineness = newFineness;
         }
     }
