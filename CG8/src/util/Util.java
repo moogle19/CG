@@ -26,7 +26,7 @@ public class Util {
      * FloatBuffer, der gross genug fuer eine 4x4 Matrix ist.
      */
     public static final FloatBuffer MAT_BUFFER = BufferUtils.createFloatBuffer(16);
-    
+
     /**
      * PI
      */

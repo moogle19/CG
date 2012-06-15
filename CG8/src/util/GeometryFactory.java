@@ -22,7 +22,14 @@ public class GeometryFactory {
      */
     public static Geometry createSphere(float r, int n, int k, String imageFile, String nightImageFile) {
         float[][][] image = Util.getImageContents(imageFile);
-        float[][][] nightImage = Util.getImageContents(nightImageFile);
+        float[][][] nightImage;
+        if(nightImageFile == null) {
+        	nightImage = image;
+        }
+        else {
+        	nightImage = Util.getImageContents(nightImageFile);
+        }
+        
         
         FloatBuffer fb = BufferUtils.createFloatBuffer((3+3+4+4) * (n+1)*(k+1));
         

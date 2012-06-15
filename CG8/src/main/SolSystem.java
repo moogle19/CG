@@ -15,6 +15,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL20;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
@@ -77,11 +78,10 @@ public class SolSystem {
             glEnable(GL_DEPTH_TEST);
             
             //shaderProgram = Util.createShaderProgram("./shader/Main_VS.glsl", "./shader/VertexColor_FS.glsl");
-
             shaderProgram = Util.createShaderProgram("./shader/FragmentMixing_VS.glsl", "./shader/FragmentMixing_FS.glsl");
             
             cam.move(-5.0f, 0.0f, 0.0f);
-            changeFineness(32);
+            changeFineness(512);
             
             Util.translationX(5.0f, moonTranslation);
             Util.rotationX((float)Math.toRadians(15.0), moonTilt);
@@ -108,7 +108,7 @@ public class SolSystem {
             frameTimeDelta += millis;
             ++frames;
             if(frameTimeDelta > 1000) {
-                System.out.println(1e3f * (float)frames / (float)frameTimeDelta + " FPS");
+                //System.out.println(1e3f * (float)frames / (float)frameTimeDelta + " FPS");
                 frameTimeDelta -= 1000;
                 frames = 0;
             }
@@ -121,7 +121,9 @@ public class SolSystem {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             
             setActiveProgram(shaderProgram);
-                        
+                                   
+            glBlendFunc(GL11.GL_SRC_COLOR, GL11.GL_ONE_MINUS_SRC_COLOR); //interpolation ziwschen beiden werten (alphablending)
+            
             // earth
             matrix2uniform(earthModelMatrix, modelLoc);
             earth.draw();
@@ -131,7 +133,6 @@ public class SolSystem {
             moon.draw();
             
             glEnable(GL_BLEND); //enable cloud blending
-            glBlendFunc(GL_ONE, GL11.GL_SRC_ALPHA);
             
             // clouds
             matrix2uniform(cloudModelMatrix, modelLoc);
@@ -228,9 +229,7 @@ public class SolSystem {
      * @param uniform Ziellocation
      */
     private static void vector3f2uniform(Vector3f vector, int uniform) {
-        vector.store(Util.MAT_BUFFER);
-        Util.MAT_BUFFER.position(0);
-        glUniform3f(uniform, vector.x, vector.y, vector.z);
+        glUniform3f(uniform, vector.getX(), vector.getY(), vector.getZ());
     }
     
     /**
@@ -246,8 +245,8 @@ public class SolSystem {
         Util.rotationY(earthRotationAngle, earthModelMatrix);
         
         // clouds
-        float cloudRotationAngle = earthRotationAngle / 2.0f;
-        Util.rotationY((cloudRotationAngle-Util.PI), cloudModelMatrix);
+        float cloudRotationAngle = earthRotationAngle / 1.5f;
+        Util.rotationY((cloudRotationAngle), cloudModelMatrix);
         
         // moon
         float moonRotationAngle = earthRotationAngle / 27.0f;
@@ -270,9 +269,9 @@ public class SolSystem {
             if(clouds != null) {
             	clouds.delete();
             }
-            earth = GeometryFactory.createSphere(1.0f, newFineness, newFineness/2, "textures/earth.jpeg", "textures/earth_night.jpeg");
-            moon = GeometryFactory.createSphere(0.5f, newFineness/2, newFineness/4, "textures/moon.jpeg", "textures/moon.jpeg");
-            clouds = GeometryFactory.createSphere(1.05f, newFineness, newFineness/2, "textures/clouds.jpeg", "textures/clouds.jpeg");
+            earth = GeometryFactory.createSphere(1.0f, newFineness, newFineness/2, "./textures/earth.jpeg", "./textures/earth_night.jpeg");
+            moon = GeometryFactory.createSphere(0.5f, newFineness/2, newFineness/4, "./textures/moon.jpeg", null);
+            clouds = GeometryFactory.createSphere(1.05f, newFineness, newFineness/2, "./textures/clouds.jpeg", null);
             earthFineness = newFineness;
         }
     }
@@ -286,8 +285,8 @@ public class SolSystem {
         modelLoc = glGetUniformLocation(program, "model");
         viewProjLoc = glGetUniformLocation(program, "viewProj");
         matrix2uniform(viewProjMatrix, viewProjLoc);
-        inverseLightDirectionLoc = glGetUniformLocation(program, "inverseLightDirection");
-        vector3f2uniform(inverseLightDirection, inverseLightDirectionLoc);
+        //inverseLightDirectionLoc = glGetUniformLocation(program, "lightDir");
+        //vector3f2uniform(inverseLightDirection, inverseLightDirectionLoc);
         
     }
 }
