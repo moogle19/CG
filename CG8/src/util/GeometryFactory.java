@@ -12,6 +12,9 @@ import org.lwjgl.util.vector.Vector3f;
  */
 public class GeometryFactory {
     
+    public static Geometry createSphere(float r, int n, int k, String imageFile) {
+    	return createSphere(r, n, k, imageFile, null);
+    }
     /**
      * Erzeugt eine Kugel.
      * @param r Radius der Kugel

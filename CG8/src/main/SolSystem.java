@@ -285,7 +285,9 @@ public class SolSystem {
         modelLoc = glGetUniformLocation(program, "model");
         viewProjLoc = glGetUniformLocation(program, "viewProj");
         matrix2uniform(viewProjMatrix, viewProjLoc);
+        
         //inverseLightDirectionLoc = glGetUniformLocation(program, "lightDir");
+        
         //vector3f2uniform(inverseLightDirection, inverseLightDirectionLoc);
         
     }
