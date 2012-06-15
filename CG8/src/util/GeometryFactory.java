@@ -60,7 +60,7 @@ public class GeometryFactory {
                             [(int)(phi / Util.PI_MUL2 * (float)image[0].length) % image[0].length]);
                 
                 fb.put(nightImage[(int)((theta / Util.PI) * (float)image.length) % image.length]
-                        [(int)(phi / Util.PI_MUL2 * (float)image[0].length) % image[0].length]);
+                        		 [(int)(phi / Util.PI_MUL2 * (float)image[0].length) % image[0].length]);
                 
                 phi += dPhi;
             }

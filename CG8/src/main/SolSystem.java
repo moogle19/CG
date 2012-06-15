@@ -8,16 +8,12 @@ import static opengl.GL.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import opengl.GL;
-
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL20;
 import org.lwjgl.util.vector.Matrix4f;
-import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 import util.Camera;
 import util.Geometry;
@@ -108,7 +104,7 @@ public class SolSystem {
             frameTimeDelta += millis;
             ++frames;
             if(frameTimeDelta > 1000) {
-                //System.out.println(1e3f * (float)frames / (float)frameTimeDelta + " FPS");
+                System.out.println(1e3f * (float)frames / (float)frameTimeDelta + " FPS");
                 frameTimeDelta -= 1000;
                 frames = 0;
             }
