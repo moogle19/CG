@@ -51,10 +51,10 @@ public class GeometryFactory {
                 
                 norm = new Vector3f(r*sinTheta*cosPhi, r*cosTheta, r*sinTheta*sinPhi);
                 norm.normalise();
-                
-                fb.put(norm.x);
-                fb.put(norm.y);
-                fb.put(norm.z);
+                				// TODO: sinnvoll??
+                fb.put(norm.x); // + r*sinTheta*cosPhi);
+                fb.put(norm.y); // + r*cosTheta);
+                fb.put(norm.z); // + r*sinTheta*sinPhi);
                 
                 fb.put(image[(int)((theta / Util.PI) * (float)image.length) % image.length]
                             [(int)(phi / Util.PI_MUL2 * (float)image[0].length) % image[0].length]);

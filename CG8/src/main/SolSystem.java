@@ -94,7 +94,7 @@ public class SolSystem {
     }
     
     public static void render() throws LWJGLException {
-        glClearColor(0.1f, 0.0f, 0.0f, 1.0f); // background color: dark red
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // background color: dark red
         
         long last = System.currentTimeMillis();
         long now, millis;
@@ -285,8 +285,8 @@ public class SolSystem {
         modelLoc = glGetUniformLocation(program, "model");
         viewProjLoc = glGetUniformLocation(program, "viewProj");
         matrix2uniform(viewProjMatrix, viewProjLoc);
-        //inverseLightDirectionLoc = glGetUniformLocation(program, "lightDir");
-        //vector3f2uniform(inverseLightDirection, inverseLightDirectionLoc);
+        inverseLightDirectionLoc = glGetUniformLocation(program, "lightDir");
+        vector3f2uniform(inverseLightDirection, inverseLightDirectionLoc);
         
     }
 }
