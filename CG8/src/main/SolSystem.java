@@ -33,6 +33,8 @@ public class SolSystem {
     private static Geometry moon = null;
     private static Geometry clouds = null;
     private static int earthFineness = 0;
+    
+    private static String earth_nighttexture = "./textures/earth_night.jpeg";
 
     // current configurations
     private static boolean bContinue = true;
@@ -46,6 +48,7 @@ public class SolSystem {
     // animation params
     private static float ingameTime = 0;
     private static float ingameTimePerSecond = 1.0f;
+    private static boolean renderclouds = true;
     
     // uniform locations
     private static int modelLoc;
@@ -104,7 +107,7 @@ public class SolSystem {
             frameTimeDelta += millis;
             ++frames;
             if(frameTimeDelta > 1000) {
-                System.out.println(1e3f * (float)frames / (float)frameTimeDelta + " FPS");
+                //System.out.println(1e3f * (float)frames / (float)frameTimeDelta + " FPS");
                 frameTimeDelta -= 1000;
                 frames = 0;
             }
@@ -127,13 +130,15 @@ public class SolSystem {
             // moon
             matrix2uniform(moonModelMatrix, modelLoc);
             moon.draw();
-            
-            glEnable(GL_BLEND); //enable cloud blending
-            
-            // clouds
-            matrix2uniform(cloudModelMatrix, modelLoc);
-            clouds.draw();
-            glDisable(GL_BLEND); //disable blending
+            if(renderclouds)
+            {
+	            glEnable(GL_BLEND); //enable cloud blending
+	            
+	            // clouds
+	            matrix2uniform(cloudModelMatrix, modelLoc);
+	            clouds.draw();
+	            glDisable(GL_BLEND); //disable blending
+            }
 
             // present screen
             Display.update();
@@ -186,6 +191,8 @@ public class SolSystem {
                         break;
                     case Keyboard.KEY_F2: glPolygonMode(GL_FRONT_AND_BACK, (wireframe ^= true) ? GL_FILL : GL_LINE); break;
                     case Keyboard.KEY_F3: if(culling ^= true) glEnable(GL_CULL_FACE); else glDisable(GL_CULL_FACE); break;
+                    case Keyboard.KEY_F4: renderclouds = !renderclouds; break;
+                    case Keyboard.KEY_F5: if(earth_nighttexture.equals("./textures/earth_night.jpeg")) earth_nighttexture = "./textures/earth.jpeg";else earth_nighttexture = "./textures/earth_night.jpeg"; changeFineness(earthFineness); break;
                 }
             }
         }
@@ -265,9 +272,9 @@ public class SolSystem {
             if(clouds != null) {
             	clouds.delete();
             }
-            earth = GeometryFactory.createSphere(1.0f, newFineness, newFineness/2, "./textures/earth.jpeg", "./textures/earth_night.jpeg");
-            moon = GeometryFactory.createSphere(0.5f, newFineness/2, newFineness/4, "./textures/moon.jpeg", null);
-            clouds = GeometryFactory.createSphere(1.05f, newFineness, newFineness/2, "./textures/clouds.jpeg", null);
+            earth = GeometryFactory.createSphere(1.0f, newFineness, newFineness/2, "./textures/earth.jpeg", earth_nighttexture);
+            moon = GeometryFactory.createSphere(0.5f, newFineness/2, newFineness/4, "./textures/moon.jpeg");
+            clouds = GeometryFactory.createSphere(1.05f, newFineness, newFineness/2, "./textures/clouds.jpeg");
             earthFineness = newFineness;
         }
     }

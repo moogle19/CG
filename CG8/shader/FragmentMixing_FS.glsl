@@ -10,5 +10,5 @@ out vec4 fragmentColor;
 
 void main(void) {
     //fragmentColor = fragmentColor1;
-    fragmentColor = mix(fragmentColor1, fragmentColor2, 0.5 + dot(lightDir, normalWC)); 
+    fragmentColor = mix(fragmentColor1, fragmentColor2, ceil(dot(lightDir, normalWC))); 
 }
