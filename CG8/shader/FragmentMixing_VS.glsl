@@ -15,7 +15,7 @@ out vec4 fragmentColor2;
 
 void main(void) {
     gl_Position = viewProj * model * vec4(modelMC, 1);
-    normalWC = normalize(vec3(model * vec4(normalMC, 1)));
+    normalWC = normalize(vec3(modelIT * vec4(normalMC, 1)));
     fragmentColor1 = vertexColor;
     fragmentColor2 = vertexColor2;
 }

@@ -53,6 +53,7 @@ public class SolSystem {
     // uniform locations
     private static int modelLoc;
     private static int viewProjLoc;
+    private static int modelITLoc;
     private static int inverseLightDirectionLoc;
     
     // uniform data
@@ -60,6 +61,7 @@ public class SolSystem {
     private static final Matrix4f moonModelMatrix = new Matrix4f();
     private static final Matrix4f cloudModelMatrix = new Matrix4f();
     private static final Matrix4f viewProjMatrix = new Matrix4f();
+    private static final Matrix4f modelITMatrix = new Matrix4f();
     private static final Vector3f inverseLightDirection = new Vector3f(0, 0, 1);
     
     // temp data
@@ -122,16 +124,29 @@ public class SolSystem {
             setActiveProgram(shaderProgram);
                                    
             glBlendFunc(GL11.GL_SRC_COLOR, GL11.GL_ONE_MINUS_SRC_COLOR); //interpolation ziwschen beiden werten (alphablending)
-            
+
             // earth
+            Matrix4f.invert(earthModelMatrix, modelITMatrix);       
+            Matrix4f.transpose(modelITMatrix, modelITMatrix);
+            matrix2uniform(modelITMatrix, modelITLoc);
+            
             matrix2uniform(earthModelMatrix, modelLoc);
             earth.draw();
-                                    
+            
             // moon
+            Matrix4f.invert(moonModelMatrix, modelITMatrix);       
+            Matrix4f.transpose(modelITMatrix, modelITMatrix);
+            matrix2uniform(modelITMatrix, modelITLoc);
+            
             matrix2uniform(moonModelMatrix, modelLoc);
             moon.draw();
+            
             if(renderclouds)
             {
+            	Matrix4f.invert(cloudModelMatrix, modelITMatrix);       
+                Matrix4f.transpose(modelITMatrix, modelITMatrix);
+                matrix2uniform(modelITMatrix, modelITLoc);
+                
 	            glEnable(GL_BLEND); //enable cloud blending
 	            
 	            // clouds
@@ -210,7 +225,8 @@ public class SolSystem {
         
         if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) bContinue = false;
         
-        Matrix4f.mul(cam.getProjection(), cam.getView(), viewProjMatrix);        
+        Matrix4f.mul(cam.getProjection(), cam.getView(), viewProjMatrix); 
+       
     }
     
     /**
@@ -273,7 +289,7 @@ public class SolSystem {
             	clouds.delete();
             }
             earth = GeometryFactory.createSphere(1.0f, newFineness, newFineness/2, "./textures/earth.jpeg", earth_nighttexture);
-            moon = GeometryFactory.createSphere(0.5f, newFineness/2, newFineness/4, "./textures/moon.jpeg");
+            moon = GeometryFactory.createSphere(0.5f, newFineness/2, newFineness/4, "./textures/moon.jpeg", "./textures/darkmoon.jpeg");
             clouds = GeometryFactory.createSphere(1.05f, newFineness, newFineness/2, "./textures/clouds.jpeg");
             earthFineness = newFineness;
         }
@@ -288,6 +304,9 @@ public class SolSystem {
         modelLoc = glGetUniformLocation(program, "model");
         viewProjLoc = glGetUniformLocation(program, "viewProj");
         matrix2uniform(viewProjMatrix, viewProjLoc);
+        
+        modelITLoc = glGetUniformLocation(program, "modelIT");
+        
         inverseLightDirectionLoc = glGetUniformLocation(program, "lightDir");
         vector3f2uniform(inverseLightDirection, inverseLightDirectionLoc);
         
