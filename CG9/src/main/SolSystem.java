@@ -14,11 +14,15 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
+
+import com.sun.org.apache.bcel.internal.generic.LoadInstruction;
+
 import util.Camera;
 import util.Geometry;
 import util.GeometryFactory;
 import util.RadiantOrb;
 import util.Util;
+import util.Util.ImageContents;
 
 /**
  *
@@ -360,7 +364,8 @@ public class SolSystem {
      * @return ID der erstellten Textur
      */
     private static int generateTexture(String filename) {
-        // TODO: Aufgabe 9.2
-        return 0;
+    	ImageContents image = Util.loadImage(filename);
+    	int texid = glGenTextures();
+    	return 0;
     }
 }

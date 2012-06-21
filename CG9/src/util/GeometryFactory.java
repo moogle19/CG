@@ -96,8 +96,57 @@ public class GeometryFactory {
      * @return Geometrie der Kugel
      */
     public static Geometry createSphere(float r, int n, int k) {
-        // TODO: Aufgabe 9.1
-        return null;
+        // TODO: Aufgabe 9.1        
+        FloatBuffer fb = BufferUtils.createFloatBuffer((3+3+4) * (n+1)*(k+1));
+        
+        float dTheta = Util.PI / (float)k;
+        float dPhi = Util.PI_MUL2 / (float)n;
+        float theta = 0;
+        for(int j=0; j <= k; ++j) {
+            float sinTheta = (float)Math.sin(theta);
+            float cosTheta = (float)Math.cos(theta);
+            float phi = 0;
+            for(int i=0; i <= n; ++i) {
+                float sinPhi = (float)Math.sin(phi);
+                float cosPhi = (float)Math.cos(phi);
+                
+                // position
+                fb.put(r*sinTheta*cosPhi);  
+                fb.put(r*cosTheta);
+                fb.put(r*sinTheta*sinPhi);
+                
+                // normal
+                fb.put(sinTheta*cosPhi);    
+                fb.put(cosTheta);
+                fb.put(sinTheta*sinPhi);
+                
+                //texture
+                fb.put((float) ((r*sinTheta*cosPhi)/Math.sqrt((r*sinTheta*cosPhi)*(r*sinTheta*cosPhi)+(r*cosTheta)*(r*cosTheta)+(r*sinTheta*sinPhi)*(r*sinTheta*sinPhi))));
+                fb.put((float) ((r*cosTheta)/Math.sqrt((r*sinTheta*cosPhi)*(r*sinTheta*cosPhi)+(r*cosTheta)*(r*cosTheta)+(r*sinTheta*sinPhi)*(r*sinTheta*sinPhi))));
+                
+                phi += dPhi;
+            }
+            theta += dTheta;
+        }
+        fb.position(0);
+        
+        IntBuffer ib = BufferUtils.createIntBuffer(k*(2*(n+1)+1));
+        for(int j=0; j < k; ++j) {
+            for(int i=0; i <= n; ++i) {
+                ib.put((j+1)*(n+1) + i);
+                ib.put(j*(n+1) + i);
+            }
+            ib.put(RESTART_INDEX);
+        }
+        ib.position(0);
+        
+        Geometry sphere = new Geometry();
+        sphere.setIndices(ib, GL_TRIANGLE_STRIP);
+        sphere.setVertices(fb);
+        sphere.addVertexAttribute(Util.ATTR_POS, 3, 0);
+        sphere.addVertexAttribute(Util.ATTR_NORMAL, 3, 12);
+        sphere.addVertexAttribute(Util.ATTR_TEX, 2, 24);
+        return sphere;
     }   
     
     /**
