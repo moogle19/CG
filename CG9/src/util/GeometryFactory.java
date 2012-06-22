@@ -96,8 +96,8 @@ public class GeometryFactory {
      * @return Geometrie der Kugel
      */
     public static Geometry createSphere(float r, int n, int k) {
-        // TODO: Aufgabe 9.1        
-        FloatBuffer fb = BufferUtils.createFloatBuffer((3+3+4) * (n+1)*(k+1));
+        // TODO: Aufgabe 9.1     	
+        FloatBuffer fb = BufferUtils.createFloatBuffer((3+3+2) * (n+1) * (k+1));
         
         float dTheta = Util.PI / (float)k;
         float dPhi = Util.PI_MUL2 / (float)n;
@@ -146,6 +146,7 @@ public class GeometryFactory {
         sphere.addVertexAttribute(Util.ATTR_POS, 3, 0);
         sphere.addVertexAttribute(Util.ATTR_NORMAL, 3, 12);
         sphere.addVertexAttribute(Util.ATTR_TEX, 2, 24);
+                
         return sphere;
     }   
     

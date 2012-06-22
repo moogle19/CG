@@ -111,12 +111,12 @@ public class SolSystem {
 
             inverseLightDirection.set(1.0f, 0.2f, 0.0f);
             inverseLightDirection.normalise();
-            
+                        
             earthTexture = generateTexture("earth.jpg");
             earthSpecularTexture = generateTexture("earth_spec.png");
             moonTexture = generateTexture("moon.jpg");
             cloudsTexture = generateTexture("clouds.jpg");
-            
+                        
             for(int i=0; i < MAX_ORBS; ++i) {
                 orbs[i] = new RadiantOrb();
                 orbs[i].setRadius(0.2f);
@@ -298,7 +298,9 @@ public class SolSystem {
      * @param location Location der Uniform
      */
     private static void texture2uniform(int texture, int target, int slot, int location) {
-        // TODO: Aufgabe 9.2
+        glActiveTexture(GL_TEXTURE0 + slot);
+        glBindTexture(target, texture);
+        glUniform1i(location, slot);        
     }
     
     /**
@@ -365,7 +367,22 @@ public class SolSystem {
      */
     private static int generateTexture(String filename) {
     	ImageContents image = Util.loadImage(filename);
+        System.out.println("test");
+
     	int texid = glGenTextures();
-    	return 0;
+    	int format = 0, internalFormat = 0;
+    	switch(image.colorComponents) {
+    		case 1: internalFormat = GL_RED; format  = GL_R8; break;
+    		case 2: internalFormat = GL_RG; format   = GL_RG8; break;
+    		case 3: internalFormat = GL_RGB; format  = GL_RGB8; break;
+    		case 4: internalFormat = GL_RGBA; format = GL_RGBA8; break;
+    	}
+    	
+        System.out.println(image.colorComponents);
+   	
+    	glTexImage2D(GL_TEXTURE_2D, 0, format, image.width, image.height, 0, internalFormat, GL_FLOAT, image.data);
+    	glGenerateMipmap(GL_TEXTURE_2D);
+    	    	
+    	return texid;
     }
 }

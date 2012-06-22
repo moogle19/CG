@@ -29,8 +29,7 @@ out vec4 finalColor;
  */
 vec3 plIntensity(vec3 p, vec3 p_p, vec3 I_p_max)
 {
-    // TODO: Aufgabe 9.3
-    return vec3(0);
+    return vec3(1/(dot(p-p_p, p-p_p)) * I_p_max);
 }
 
 /**
@@ -43,11 +42,31 @@ vec3 plIntensity(vec3 p, vec3 p_p, vec3 I_p_max)
  */
 vec3 calcLighting(vec3 pos, vec3 normal, vec3 c_d, vec3 c_s)
 {
-    // TODO: Aufgabe 9.3
-    return vec3(0);
+	vec3 d;
+	vec3 s;
+	vec3 a;
+	vec3 ref;
+	vec3 v;
+	vec3 erg = vec3(0, 0, 0);
+
+	for (int i = 0; i < MAX_POINT_LIGHTS; i++)
+	{
+		d = plMaxIntensity[i] * k_dif * c_d * max(dot(normalize(pos-plPosition[i]), normal), 0);
+		
+		//specular
+		ref = reflect(normalize(plPosition[i]-pos), normal);
+		v = normalize(eyePosition - pos);
+		s = plMaxIntensity[i] * k_spec * c_s * max(pow(dot(ref, v), es), 0.0);
+		a = plMaxIntensity[i] * k_a * c_a;
+		erg += d + s + a;
+	}
+	
+    return erg;
 }
 
 void main(void)
 {
-	// TODO: Aufgabe 9.3
+	vec4 diff = texture(diffuseTex, fragmentTexCoords);
+	vec4 spec = texture(specularTex, fragmentTexCoords);
+	finalColor = vec4(calcLighting(positionWC, normalWC, diff.xyz, spec.xyz), 1.0);
 }

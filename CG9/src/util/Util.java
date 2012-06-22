@@ -641,6 +641,8 @@ public class Util {
             throw new IllegalArgumentException(imageFile + " does not exist");
         }
         try {
+            System.out.println(imageFile);
+
             BufferedImage image = ImageIO.read(file);
             Util.ImageContents contents = new Util.ImageContents(image.getWidth(), image.getHeight(), image.getColorModel().getNumComponents());
             for(int y=0; y < image.getHeight(); ++y) {
