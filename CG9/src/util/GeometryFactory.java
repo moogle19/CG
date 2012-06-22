@@ -21,8 +21,66 @@ public class GeometryFactory {
      * @return Geometrie der Kugel
      */
     public static Geometry createSphereWithDisplacement(float r, int n, int k, float displaceHeight, String displaceFile) {    
-        // TODO: Aufgabe 9.4
-        return null;
+        //TODO: 9.4
+    	float[][][] image = Util.getImageContents(displaceFile);
+    	FloatBuffer fb = BufferUtils.createFloatBuffer((3+3+2) * (n+1) * (k+1));
+        
+        float dTheta = Util.PI / (float)k;
+        float dPhi = Util.PI_MUL2 / (float)n;
+        float theta = 0;
+        for(int j=0; j <= k; ++j) {
+            float sinTheta = (float)Math.sin(theta);
+            float cosTheta = (float)Math.cos(theta);
+            float phi = 0;
+            for(int i=0; i <= n; ++i) {
+                float sinPhi = (float)Math.sin(phi);
+                float cosPhi = (float)Math.cos(phi);
+                
+                //Rotwert
+                float red = image[(int)((theta / Util.PI) * (float)image.length) % image.length]
+                        		 [(int)(phi / Util.PI_MUL2 * (float)image[0].length) % image[0].length][0];
+                
+                //Verschiebungsdistanz
+                float d =	displaceHeight * red;	  
+                
+                // position
+                fb.put(r*sinTheta*cosPhi + d * sinTheta*cosPhi);  
+                fb.put(r*cosTheta + d * cosTheta);
+                fb.put(r*sinTheta*sinPhi + d * sinTheta*sinPhi);
+                
+                // normal
+                fb.put(sinTheta*cosPhi);    
+                fb.put(cosTheta);
+                fb.put(sinTheta*sinPhi);
+                
+                //texture
+                fb.put((float) ((r*sinTheta*cosPhi)/Math.sqrt((r*sinTheta*cosPhi)*(r*sinTheta*cosPhi)+(r*cosTheta)*(r*cosTheta)+(r*sinTheta*sinPhi)*(r*sinTheta*sinPhi))));
+                fb.put((float) ((r*cosTheta)/Math.sqrt((r*sinTheta*cosPhi)*(r*sinTheta*cosPhi)+(r*cosTheta)*(r*cosTheta)+(r*sinTheta*sinPhi)*(r*sinTheta*sinPhi))));
+                
+                phi += dPhi;
+            }
+            theta += dTheta;
+        }
+        fb.position(0);
+        
+        IntBuffer ib = BufferUtils.createIntBuffer(k*(2*(n+1)+1));
+        for(int j=0; j < k; ++j) {
+            for(int i=0; i <= n; ++i) {
+                ib.put((j+1)*(n+1) + i);
+                ib.put(j*(n+1) + i);
+            }
+            ib.put(RESTART_INDEX);
+        }
+        ib.position(0);
+        
+        Geometry sphere = new Geometry();
+        sphere.setIndices(ib, GL_TRIANGLE_STRIP);
+        sphere.setVertices(fb);
+        sphere.addVertexAttribute(Util.ATTR_POS, 3, 0);
+        sphere.addVertexAttribute(Util.ATTR_NORMAL, 3, 12);
+        sphere.addVertexAttribute(Util.ATTR_TEX, 2, 24);
+                
+        return sphere;
     }
     
     /**

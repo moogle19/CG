@@ -113,7 +113,7 @@ public class SolSystem {
             inverseLightDirection.normalise();
                         
             earthTexture = generateTexture("earth.jpg");
-            earthSpecularTexture = generateTexture("earth_spec.png");
+           // earthSpecularTexture = generateTexture("earth_spec.png");
             moonTexture = generateTexture("moon.jpg");
             cloudsTexture = generateTexture("clouds.jpg");
                         
@@ -367,7 +367,6 @@ public class SolSystem {
      */
     private static int generateTexture(String filename) {
     	ImageContents image = Util.loadImage(filename);
-        System.out.println("test");
 
     	int texid = glGenTextures();
     	int format = 0, internalFormat = 0;
@@ -377,9 +376,7 @@ public class SolSystem {
     		case 3: internalFormat = GL_RGB; format  = GL_RGB8; break;
     		case 4: internalFormat = GL_RGBA; format = GL_RGBA8; break;
     	}
-    	
-        System.out.println(image.colorComponents);
-   	
+    	  	
     	glTexImage2D(GL_TEXTURE_2D, 0, format, image.width, image.height, 0, internalFormat, GL_FLOAT, image.data);
     	glGenerateMipmap(GL_TEXTURE_2D);
     	    	
